@@ -19,16 +19,24 @@ static const char *TAG = "example";
 
 static void configure_led(void);
 static void blink_led(void);
+void dummy_task(void *pvParameter);
 
 
 void app_main(void)
 {
-    /* Configure the peripheral according to the LED type */
+    xTaskCreate(dummy_task,
+                "dummy_task",
+                2048,
+                NULL,
+                1,
+                NULL);
+
+	/* Configure the peripheral according to the LED type */
     configure_led();
 
     while (1)
     {
-        ESP_LOGI(TAG, "Turning the LED %s!", s_led_state == true ? "ON" : "OFF");
+        //ESP_LOGI(TAG, "Turning the LED %s!", s_led_state == true ? "ON" : "OFF");
         blink_led();
         /* Toggle the LED state */
         s_led_state++;
@@ -38,6 +46,19 @@ void app_main(void)
         }
         vTaskDelay(BLINK_PERIOD / portTICK_PERIOD_MS);
     }
+}
+
+
+void dummy_task(void *pvParameter)
+{
+  uint8_t counter = 0u;
+
+  while(1)
+  {
+	  counter++;
+	  printf("Hello %d!\n", counter);
+      vTaskDelay(1000u / portTICK_PERIOD_MS);
+  }
 }
 
 
