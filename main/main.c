@@ -9,23 +9,29 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
+#include "hardware.h"
+
 #define BLINK_GPIO 48u
 #define BLINK_PERIOD 1000
 
 static uint8_t s_led_state = 0;
 static led_strip_handle_t led_strip;
-static const char *TAG = "example";
+static const char *TAG = "PH Main";
 
 
 static void configure_led(void);
 static void blink_led(void);
-void dummy_task(void *pvParameter);
+void hw_task(void *pvParameter);
 
 
 void app_main(void)
 {
-    xTaskCreate(dummy_task,
-                "dummy_task",
+    /* Initialize hardware */
+	hardware_init();
+
+	/* Create thread for hardware task */
+	xTaskCreate(hw_task,
+                "hardware_low_level_task",
                 2048,
                 NULL,
                 1,
@@ -34,9 +40,34 @@ void app_main(void)
 	/* Configure the peripheral according to the LED type */
     configure_led();
 
+    uint16_t pot_value;
+    uint8_t red;
+    uint8_t green;
+    uint8_t blue;
+
+    while(1)
+    {
+    	vTaskDelay(50 / portTICK_PERIOD_MS);
+    	pot_value = hardware_get_pot_value();
+
+    	//pot_value *= 16;
+
+    	//red = pot_value >> 11;
+    	//green = (pot_value >> 5) & 0x3fu;
+    	//blue = pot_value & 0x1Fu;
+
+    	blue = 0;
+    	red = 16 - (pot_value / 256);
+    	green = pot_value / 256;
+
+    	led_strip_set_pixel(led_strip, 0, red, green, blue);
+    	/* Refresh the strip to send data */
+        led_strip_refresh(led_strip);
+    }
+
+#if 0
     while (1)
     {
-        //ESP_LOGI(TAG, "Turning the LED %s!", s_led_state == true ? "ON" : "OFF");
         blink_led();
         /* Toggle the LED state */
         s_led_state++;
@@ -46,18 +77,17 @@ void app_main(void)
         }
         vTaskDelay(BLINK_PERIOD / portTICK_PERIOD_MS);
     }
+#endif
 }
 
 
-void dummy_task(void *pvParameter)
+void hw_task(void *pvParameter)
 {
-  uint8_t counter = 0u;
-
   while(1)
   {
-	  counter++;
-	  printf("Hello %d!\n", counter);
-      vTaskDelay(1000u / portTICK_PERIOD_MS);
+	  vTaskDelay(50 / portTICK_PERIOD_MS);
+	  /* Call the thread every 20 milliseconds, hopefully... */
+	  hardware_main();
   }
 }
 
