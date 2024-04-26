@@ -14,12 +14,19 @@
 #define BLINK_GPIO 48u
 #define BLINK_PERIOD 1000
 
+#define BUTTON_1 	39u
+#define BUTTON_2 	38u
+#define BUTTON_3 	47u
+#define BUTTON_4 	41u
+
 static uint8_t s_led_state = 0;
 static led_strip_handle_t led_strip;
 static const char *TAG = "PH Main";
 
 
 static void configure_led(void);
+static void configure_buttons(void);
+
 static void blink_led(void);
 void hw_task(void *pvParameter);
 
@@ -39,6 +46,7 @@ void app_main(void)
 
 	/* Configure the peripheral according to the LED type */
     configure_led();
+    configure_buttons();
 
     uint16_t pot_value;
     uint8_t red;
@@ -50,15 +58,48 @@ void app_main(void)
     	vTaskDelay(50 / portTICK_PERIOD_MS);
     	pot_value = hardware_get_pot_value();
 
-    	//pot_value *= 16;
+    	//blue = 0;
+    	//red = 16 - (pot_value / 256);
+    	//green = pot_value / 256;
 
-    	//red = pot_value >> 11;
-    	//green = (pot_value >> 5) & 0x3fu;
-    	//blue = pot_value & 0x1Fu;
+    	if (gpio_get_level(BUTTON_1) == 0)
+    	{
+    		red = 16;
+    	}
+    	else
+    	{
+    		red = 0;
+    	}
 
-    	blue = 0;
-    	red = 16 - (pot_value / 256);
-    	green = pot_value / 256;
+    	if (gpio_get_level(BUTTON_2) == 0)
+    	{
+    		blue = 16;
+    	}
+    	else
+    	{
+    		blue = 0;
+    	}
+
+    	if (gpio_get_level(BUTTON_3) == 0)
+    	{
+    		green = 16;
+    	}
+    	else
+    	{
+    		green = 0;
+    	}
+
+    	if (gpio_get_level(BUTTON_4) == 0)
+    	{
+    		green = 16;
+    		red = 16;
+    		blue = 16;
+    	}
+    	else
+    	{
+    		/* Do nothing. */
+    	}
+
 
     	led_strip_set_pixel(led_strip, 0, red, green, blue);
     	/* Refresh the strip to send data */
@@ -106,6 +147,14 @@ static void configure_led(void)
     ESP_ERROR_CHECK(led_strip_new_rmt_device(&strip_config, &rmt_config, &led_strip));
     /* Set all LED off to clear all pixels */
     led_strip_clear(led_strip);
+}
+
+static void configure_buttons(void)
+{
+	gpio_set_direction(BUTTON_1, GPIO_MODE_INPUT);
+	gpio_set_direction(BUTTON_2, GPIO_MODE_INPUT);
+	gpio_set_direction(BUTTON_3, GPIO_MODE_INPUT);
+	gpio_set_direction(BUTTON_4, GPIO_MODE_INPUT);
 }
 
 
