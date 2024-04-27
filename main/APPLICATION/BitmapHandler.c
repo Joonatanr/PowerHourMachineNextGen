@@ -8,7 +8,9 @@
 #include "BitmapHandler.h"
 #include "SdCardHandler.h"
 #include "display.h"
-#include "ff.h"
+
+#include "esp_vfs_fat.h"
+
 #include "random.h"
 #include "systimer.h"
 
@@ -85,12 +87,12 @@ typedef struct
 
 BitmapFilesCategory priv_file_list[NUMBER_OF_FILE_CATEGORIES] =
 {
-     {.directoryName = MOUNT_POINT"/Men",          .fileNames = NULL, .number_of_files = 0u },
-     {.directoryName = MOUNT_POINT"/Women",        .fileNames = NULL, .number_of_files = 0u },
-     {.directoryName = MOUNT_POINT"/Everybody",    .fileNames = NULL, .number_of_files = 0u },
-     {.directoryName = MOUNT_POINT"/Men_Spicy",    .fileNames = NULL, .number_of_files = 0u },
-     {.directoryName = MOUNT_POINT"/Women_Spicy",  .fileNames = NULL, .number_of_files = 0u },
-     {.directoryName = MOUNT_POINT"/All_Spicy",    .fileNames = NULL, .number_of_files = 0u },
+     {.directoryName = "/Men",          .fileNames = NULL, .number_of_files = 0u },
+     {.directoryName = "/Women",        .fileNames = NULL, .number_of_files = 0u },
+     {.directoryName = "/Everybody",    .fileNames = NULL, .number_of_files = 0u },
+     {.directoryName = "/Men_Spicy",    .fileNames = NULL, .number_of_files = 0u },
+     {.directoryName = "/Women_Spicy",  .fileNames = NULL, .number_of_files = 0u },
+     {.directoryName = "/All_Spicy",    .fileNames = NULL, .number_of_files = 0u },
 };
 
 
@@ -104,6 +106,7 @@ Public void BitmapHandler_init(void)
     for(ix = 0u; ix < NUMBER_OF_FILE_CATEGORIES; ix++)
     {
         priv_file_list[ix].fileNames = malloc(FILE_NAME_PTR_CHUNK_SIZE * sizeof(char*));
+        assert(priv_file_list[ix].fileNames);
     }
 }
 
@@ -122,13 +125,17 @@ Public void BitmapHandler_start(void)
         filelist_ptr = &priv_file_list[category];
         ix = 0u;
 
-        printf( "Opening directory : %s \r\n", filelist_ptr->directoryName);
+        //printf( "Opening directory : %s \r\n", filelist_ptr->directoryName);
         r = f_opendir(&DI, filelist_ptr->directoryName);
 
         if(r != FR_OK)
         {
-        	printf("Could not open directory : %s \r\n", filelist_ptr->directoryName);
+        	printf("Could not open directory : %s  error : %d \r\n", filelist_ptr->directoryName, r);
             continue;
+        }
+        else
+        {
+        	printf("Successfully opened directory : %s \r\n", filelist_ptr->directoryName);
         }
 
         /*Read everything inside the directory*/
@@ -139,12 +146,24 @@ Public void BitmapHandler_start(void)
             /* Check for errors. */
             if (r != FR_OK)
             {
-                printf( "Error reading file/directory\r\n");
+                printf( "Error reading file directory %s \n", filelist_ptr->directoryName);
                 continue;
             }
+            else
+            {
+            	//printf("f_readdir is successful for directory %s file %s\n", filelist_ptr->directoryName, FI.fname);
+            }
 
+            if(strlen(FI.fname) == 0)
+            {
+            	continue;
+            }
+
+            //printf("Trying to allocate for %s fname : %s strlen : %d\n", filelist_ptr->directoryName, FI.fname, strlen(FI.fname));
             /* Add to the list of filenames. */
             filelist_ptr->fileNames[ix] = malloc(strlen(FI.fname) * sizeof(char));
+            assert(filelist_ptr->fileNames[ix]);
+
             strcpy(filelist_ptr->fileNames[ix], FI.fname);
             ix++;
 
