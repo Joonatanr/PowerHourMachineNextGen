@@ -11,11 +11,11 @@
 
 #include "hardware.h"
 #include "buttons.h"
+#include "pot.h"
 
 #define BLINK_GPIO 48u
 #define BLINK_PERIOD 1000
 
-static uint8_t s_led_state = 0;
 static led_strip_handle_t led_strip;
 static const char *TAG = "PH Main";
 
@@ -44,9 +44,11 @@ void app_main(void)
     uint8_t green = 0;
     uint8_t blue = 0;
 
+#if 1
     while(1)
     {
     	vTaskDelay(50 / portTICK_PERIOD_MS);
+    	vTaskDelay(1000 / portTICK_PERIOD_MS);
 
     	if (isButton(BUTTON_RED))
     	{
@@ -69,16 +71,28 @@ void app_main(void)
     	else
     	{
     		/* Test the adc */
-    		red = hardware_get_pot_value(0) / 256;
-    		green = hardware_get_pot_value(1) / 256;
-    		blue = hardware_get_pot_value(2) / 256u;
+    		red = pot_getSelectedRange(POTENTIOMETER_1) * 4;
+    		green = pot_getSelectedRange(POTENTIOMETER_2) * 4;
+    		blue = pot_getSelectedRange(POTENTIOMETER_3) * 4;
     	}
-
 
     	led_strip_set_pixel(led_strip, 0, red, green, blue);
     	/* Refresh the strip to send data */
         led_strip_refresh(led_strip);
     }
+#else
+
+    while(1)
+    {
+    	vTaskDelay(1000 / portTICK_PERIOD_MS);;
+    	printf("Adc1 : %d\n", pot_getCurrentMeasurement(POTENTIOMETER_1));
+    	printf("Adc2 : %d\n", pot_getCurrentMeasurement(POTENTIOMETER_2));
+    	printf("Adc3 : %d\n", pot_getCurrentMeasurement(POTENTIOMETER_3));
+    	printf("Adc4 : %d\n", pot_getCurrentMeasurement(POTENTIOMETER_4));
+
+
+    }
+#endif
 }
 
 

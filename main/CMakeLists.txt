@@ -5,7 +5,8 @@ idf_component_register(
     SRCS 
     main.c 
     HW/hardware.c
-    HW/buttons.c 
+    HW/buttons.c
+    HW/pot.c 
     MISC/misc.c   
     # list the source files of this component
     
