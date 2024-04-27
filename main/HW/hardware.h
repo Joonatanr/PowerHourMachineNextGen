@@ -8,9 +8,7 @@
 #ifndef MAIN_HARDWARE_H_
 #define MAIN_HARDWARE_H_
 
-#include <stdio.h>
-#include <stdbool.h>
-#include <unistd.h>
+#include "typedefs.h"
 
 void hardware_init(void);
 void hardware_main(void);

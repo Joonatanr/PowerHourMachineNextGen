@@ -1,6 +1,6 @@
-#include <stdio.h>
-#include <stdbool.h>
-#include <unistd.h>
+
+
+#include "typedefs.h"
 
 #include "driver/gpio.h"
 #include "esp_log.h"

@@ -7,10 +7,13 @@
 
 #include "hardware.h"
 
+/* TODO : Move ADC includes to ADC handler. */
 #include "esp_adc/adc_oneshot.h"
 #include "esp_adc/adc_cali.h"
 #include "esp_adc/adc_cali_scheme.h"
+
 #include "esp_log.h"
+#include "esp_timer.h"
 
 
 static adc_oneshot_unit_handle_t adc2_handle;
@@ -19,8 +22,11 @@ static int adc_raw[2][10];
 //static int voltage[2][10];
 
 
-static bool example_adc_calibration_init(adc_unit_t unit, adc_channel_t channel, adc_atten_t atten, adc_cali_handle_t *out_handle);
-static void example_adc_calibration_deinit(adc_cali_handle_t handle);
+static bool adc_calibration_init(adc_unit_t unit, adc_channel_t channel, adc_atten_t atten, adc_cali_handle_t *out_handle);
+static void adc_calibration_deinit(adc_cali_handle_t handle);
+
+static void configure_timer(void);
+void timer_callback_10msec(void *param);
 
 static const char *TAG = "PH Hardware";
 static int priv_adc_result = 0;
@@ -28,7 +34,11 @@ static int priv_adc_result = 0;
 
 void hardware_init(void)
 {
-    //-------------ADC2 Init---------------//
+	configure_timer();
+
+
+	/* TODO : Move this to ADC handler. */
+	//-------------ADC2 Init---------------//
     adc_oneshot_unit_init_cfg_t init_config2 =
     {
         .unit_id = ADC_UNIT_2,
@@ -45,7 +55,7 @@ void hardware_init(void)
 
     //-------------ADC2 Calibration Init---------------//
     adc_cali_handle_t adc2_cali_handle = NULL;
-    bool do_calibration2 = example_adc_calibration_init(ADC_UNIT_2, ADC_CHANNEL_4, ADC_ATTEN_DB_11, &adc2_cali_handle);
+    bool do_calibration2 = adc_calibration_init(ADC_UNIT_2, ADC_CHANNEL_4, ADC_ATTEN_DB_11, &adc2_cali_handle);
 
     //-------------ADC2 Config---------------//
     ESP_ERROR_CHECK(adc_oneshot_config_channel(adc2_handle, ADC_CHANNEL_4, &config));
@@ -57,6 +67,34 @@ void hardware_main(void)
     priv_adc_result = adc_raw[1][0];
 }
 
+
+static void configure_timer(void)
+{
+	const esp_timer_create_args_t my_timer_args =
+	{
+	      .callback = &timer_callback_10msec,
+	      .name = "My Timer"
+	};
+
+	esp_timer_handle_t timer_handler;
+
+	printf("Configuring timer...\n");
+
+	ESP_ERROR_CHECK(esp_timer_create(&my_timer_args, &timer_handler));
+	ESP_ERROR_CHECK(esp_timer_start_periodic(timer_handler, 10000)); /* Set timer to 10000 microseconds, (10ms) */
+}
+
+
+/* TODO : Here we are going to run the realtime hi prio thread. */
+void timer_callback_10msec(void *param)
+{
+
+}
+
+
+
+
+/** TODO */
 uint16_t hardware_get_pot_value(void)
 {
 	return priv_adc_result;
@@ -66,7 +104,8 @@ uint16_t hardware_get_pot_value(void)
 /*---------------------------------------------------------------
         ADC Calibration
 ---------------------------------------------------------------*/
-static bool example_adc_calibration_init(adc_unit_t unit, adc_channel_t channel, adc_atten_t atten, adc_cali_handle_t *out_handle)
+/* TODO : Do we really need such hardcore ADC handling??? */
+static bool adc_calibration_init(adc_unit_t unit, adc_channel_t channel, adc_atten_t atten, adc_cali_handle_t *out_handle)
 {
     adc_cali_handle_t handle = NULL;
     esp_err_t ret = ESP_FAIL;
@@ -121,7 +160,7 @@ static bool example_adc_calibration_init(adc_unit_t unit, adc_channel_t channel,
     return calibrated;
 }
 
-static void example_adc_calibration_deinit(adc_cali_handle_t handle)
+static void adc_calibration_deinit(adc_cali_handle_t handle)
 {
 #if ADC_CALI_SCHEME_CURVE_FITTING_SUPPORTED
     ESP_LOGI(TAG, "deregister %s calibration scheme", "Curve Fitting");
