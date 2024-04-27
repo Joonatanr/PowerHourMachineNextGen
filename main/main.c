@@ -12,6 +12,7 @@
 #include "pot.h"
 #include "display.h"
 #include "SdCardHandler.h"
+#include "Configuration.h"
 
 /* For debugging */
 Private led_strip_handle_t led_strip;
@@ -47,11 +48,12 @@ void app_main(void)
     /* Initialize the SD Card reader*/
 	sdCard_init();
 
-#if 0
     //Set up the configuration
     configuration_start();
 
     ColorScheme_start();
+
+#if 0
     backlight_set_level(configuration_getItem(CONFIG_ITEM_BRIGHTNESS));
 
     /* Initialize the main scheduler. */

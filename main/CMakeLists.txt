@@ -9,7 +9,9 @@ idf_component_register(
     HW/pot.c
     HW/display.c 
     MISC/misc.c
-    APPLICATION/SdCardHandler.c  
+    APPLICATION/SdCardHandler.c
+    APPLICATION/Configuration.c
+    APPLICATION/ColorScheme.c  
     # list the source files of this component
     
     INCLUDE_DIRS 
