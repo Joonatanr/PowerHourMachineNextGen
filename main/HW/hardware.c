@@ -13,7 +13,7 @@
 #include "hardware.h"
 #include "buttons.h"
 #include "pot.h"
-
+#include "backlight.h"
 
 #include "esp_log.h"
 #include "esp_timer.h"
@@ -60,6 +60,8 @@ Public void hardware_init(void)
 	buttons_init();
 
 	pot_init();
+
+	backlight_init();
 }
 
 /* Runs every 100 ms. */

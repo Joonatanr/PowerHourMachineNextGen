@@ -106,12 +106,16 @@ void sdCard_init(void)
 }
 
 
-void sdCard_Read_bmp_file(const char *path, uint16_t * output_buffer)
+bool sdCard_Read_bmp_file(const char *path, uint16_t * output_buffer)
 {
 	char str[64] = MOUNT_POINT;
 	strcat(str, path);
 
-	read_bmp_file(str, output_buffer);
+	if(read_bmp_file(str, output_buffer) == ESP_OK)
+	{
+		return true;
+	}
+	return false;
 }
 
 /*********** Private functions ***********/

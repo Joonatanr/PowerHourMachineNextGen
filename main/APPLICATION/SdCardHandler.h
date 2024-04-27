@@ -12,7 +12,7 @@
 
 
 extern void sdCard_init(void);
-extern void sdCard_Read_bmp_file(const char *path, uint16_t * output_buffer);
+extern bool sdCard_Read_bmp_file(const char *path, uint16_t * output_buffer);
 
 
 #endif /* LOGIC_SDCARDHANDLER_H_ */

@@ -33,7 +33,7 @@ Public U8 font_getCharWidth(char asc, FontType_t font)
     if ((asc >= 0x20u) && (asc <= (0x20u + font_info_ptr->length)))
     {
         c = asc - 0x20u;
-        res = font_info_ptr->chars[c].image->width;
+        res = font_info_ptr->chars[(unsigned char)c].image->width;
     }
 
     return res;

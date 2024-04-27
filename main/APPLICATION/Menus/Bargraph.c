@@ -10,7 +10,7 @@
 #include "backlight.h"
 #include "display.h"
 #include "LcdWriter.h"
-#include "MISC/misc.h"
+#include "misc.h"
 #include "PowerHourMain.h"
 
 //#include <LOGIC/SnakeGame/SnakeMain.h>

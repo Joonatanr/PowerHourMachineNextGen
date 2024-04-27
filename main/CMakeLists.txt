@@ -7,11 +7,32 @@ idf_component_register(
     HW/hardware.c
     HW/buttons.c
     HW/pot.c
-    HW/display.c 
+    HW/display.c
+    HW/backlight.c
+    HW/buzzer.c
+    HW/systimer.c
+    HW/random.c 
     MISC/misc.c
     APPLICATION/SdCardHandler.c
     APPLICATION/Configuration.c
-    APPLICATION/ColorScheme.c  
+    APPLICATION/ColorScheme.c
+    APPLICATION/Scheduler.c  
+    APPLICATION/LcdWriter.c
+    APPLICATION/BitmapHandler.c
+    APPLICATION/MessageBox.c
+    APPLICATION/PowerHourMain.c
+    APPLICATION/SpecialTasks.c
+    APPLICATION/Bitmaps/Bitmaps.c
+    APPLICATION/Bitmaps/Beershot.c
+    APPLICATION/Bitmaps/laudur_lapik.c
+    APPLICATION/Menus/menu.c
+    APPLICATION/Menus/Bargraph.c
+    APPLICATION/Fonts/Arial12.c
+    APPLICATION/Fonts/Arial14Bold.c
+    APPLICATION/Fonts/Arial16Bold.c
+    APPLICATION/Fonts/ClockFont.c
+    APPLICATION/Fonts/Fonts.c
+    APPLICATION/Fonts/SmallFont.c
     # list the source files of this component
     
     INCLUDE_DIRS 

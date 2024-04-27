@@ -33,7 +33,7 @@
 #define PIN_NUM_DC         5
 #define PIN_NUM_RST        3
 #define PIN_NUM_DISPLAY_CS 4
-#define PIN_NUM_BCKL       2
+//#define PIN_NUM_BCKL       2
 
 /*
 **====================================================================================
@@ -58,7 +58,7 @@ static void lcd_spi_pre_transfer_callback(spi_transaction_t *t);
 static void lcd_cmd(spi_device_handle_t spi, const uint8_t cmd, bool keep_cs_active);
 static void lcd_data(spi_device_handle_t spi, const uint8_t *data, int len);
 static void lcd_init(spi_device_handle_t spi);
-static void send_display_data(spi_device_handle_t spi, int xPos, int yPos, int width, int height, uint16_t *linedata, bool isBufferConstant);
+static void send_display_data(spi_device_handle_t spi, int xPos, int yPos, int width, int height, const uint16_t *linedata, bool isBufferConstant);
 static void wait_display_data_finish(spi_device_handle_t spi);
 
 
@@ -106,6 +106,7 @@ DRAM_ATTR static const lcd_init_cmd_t st_init_cmds[]=
 static spi_device_handle_t priv_spi_handle;
 static uint16_t *line_data;
 
+uint16_t * priv_frame_buffer1;
 
 /*
 **====================================================================================
@@ -139,6 +140,9 @@ void display_init(void)
 
     /* This buffer is used by the fill Rectangle function. */
     line_data = heap_caps_malloc(DISPLAY_MAX_TRANSFER_SIZE, MALLOC_CAP_DMA);
+
+    /* Allocate memory for the main frame buffer. */
+    priv_frame_buffer1 = heap_caps_malloc(DISPLAY_HEIGHT*DISPLAY_WIDTH*sizeof(uint16_t), MALLOC_CAP_DMA);
 }
 
 
@@ -149,7 +153,7 @@ void display_drawScreenBuffer(uint16_t *buf)
 }
 
 
-void display_drawBitmap(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t *bmp_buf)
+void display_drawImage(uint16_t x, uint16_t y, uint16_t width, uint16_t height, const uint16_t *bmp_buf)
 {
     wait_display_data_finish(priv_spi_handle);
     send_display_data(priv_spi_handle, x, y, width, height, bmp_buf, false);
@@ -171,6 +175,62 @@ void display_fillRectangle(uint16_t x, uint16_t y, uint16_t width, uint16_t heig
 	send_display_data(priv_spi_handle, x, y, width, height, line_data, true);
 }
 
+Public void display_fill(U16 color)
+{
+    display_fillRectangle(0,0,DISPLAY_WIDTH,DISPLAY_HEIGHT,color);
+}
+
+Public void display_clear(void)
+{
+    display_fill(disp_background_color);
+}
+
+Public U16 * display_get_frame_buffer(void)
+{
+	return priv_frame_buffer1;
+}
+
+Public void display_flushBuffer(U16 x, U16 y, U16 width, U16 height)
+{
+	//display_drawScreenBuffer(priv_frame_buffer1);
+	display_drawImage(x, y, width, height, priv_frame_buffer1);
+}
+
+
+Public void display_drawBitmapCenter(const U16 * src_ptr, U16 centerPoint, U16 y, U16 width, U16 height)
+{
+    U8 halfWidth;
+    U8 myX;
+
+    if (src_ptr != NULL)
+    {
+        halfWidth = width >> 1u;
+        if (halfWidth <= centerPoint)
+        {
+            myX = centerPoint - halfWidth;
+        }
+        else
+        {
+            myX = 0u;
+        }
+
+        display_drawImage(myX, y, width, height, src_ptr);
+    }
+}
+
+
+Public void display_drawRectangle(U16 x, U16 y, U16 width, U16 height, U16 line_width, U16 color)
+{
+    display_fillRectangle(x,                       y,                        width,      line_width, color);
+    display_fillRectangle(x,                       y,                        line_width, height,     color);
+    display_fillRectangle(x,                       y + height - line_width,  width,      line_width, color);
+    display_fillRectangle(x + width - line_width,  y,                        line_width, height,     color);
+}
+
+Public void display_drawTimageCenter(const tImage * image_ptr, U16 centerPoint, U16 y)
+{
+    display_drawBitmapCenter(image_ptr->data, centerPoint, y, image_ptr->width, image_ptr->height);
+}
 
 /*
 **====================================================================================
@@ -194,7 +254,7 @@ static void lcd_init(spi_device_handle_t spi)
 
     //Initialize non-SPI GPIOs
     gpio_config_t io_conf = {};
-    io_conf.pin_bit_mask = ((1ULL<<PIN_NUM_DC) | (1ULL<<PIN_NUM_RST) | (1ULL<<PIN_NUM_BCKL));
+    io_conf.pin_bit_mask = ((1ULL<<PIN_NUM_DC) | (1ULL<<PIN_NUM_RST));
     io_conf.mode = GPIO_MODE_OUTPUT;
     io_conf.pull_up_en = true;
     gpio_config(&io_conf);
@@ -222,7 +282,7 @@ static void lcd_init(spi_device_handle_t spi)
     }
 
     ///Enable backlight
-    gpio_set_level(PIN_NUM_BCKL, 1);
+    //gpio_set_level(PIN_NUM_BCKL, 1);
 }
 
 
@@ -273,12 +333,12 @@ static void lcd_data(spi_device_handle_t spi, const uint8_t *data, int len)
 uint8_t priv_number_of_transfers = 0u;
 
 /* Updates the whole screen */
-static void send_display_data(spi_device_handle_t spi, int xPos, int yPos, int width, int height, uint16_t *linedata, bool isBufferConstant)
+static void send_display_data(spi_device_handle_t spi, int xPos, int yPos, int width, int height, const uint16_t *linedata, bool isBufferConstant)
 {
     esp_err_t ret;
     int total_size_bytes = width * height * 2;
     int chunk_ix = 5;
-    uint16_t * line_ptr;
+    const uint16_t * line_ptr;
     int curr_transfer_size;
 
     //Transaction descriptors. Declared static so they're not allocated on the stack; we need this memory even when this
