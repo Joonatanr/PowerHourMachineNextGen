@@ -174,7 +174,7 @@ Public void BitmapHandler_start(void)
 
         } while(FI.fname[0]);
 
-        filelist_ptr->number_of_files = ix - 1u;
+        filelist_ptr->number_of_files = ix;
 
         /** Debug */
         for (ix = 0u; ix < filelist_ptr->number_of_files; ix++)
@@ -187,6 +187,18 @@ Public void BitmapHandler_start(void)
     }
 
     r = f_closedir(&DI);
+
+    int file_index;
+
+    for(ix = 0u; ix < NUMBER_OF_FILE_CATEGORIES; ix++)
+    {
+    	printf("Category : %d has %d files : \n", ix, priv_file_list[ix].number_of_files);
+
+    	for (file_index = 0u; file_index < priv_file_list[ix].number_of_files; file_index++)
+    	{
+    		printf("----File : %s\n", priv_file_list[ix].fileNames[file_index]);
+    	}
+    }
 }
 
 
@@ -250,9 +262,10 @@ Public void BitmapHandler_getRandomBitmapForCategory(BitmapHandler_FileCategory_
     U16 ix;
     char * ps = dest;
 
-    if (type < NUMBER_OF_FILE_CATEGORIES)
+    if ((type < NUMBER_OF_FILE_CATEGORIES) && (priv_file_list[type].number_of_files > 0))
     {
-        ix = generate_random_number(priv_file_list[type].number_of_files - 1u);
+    	ix = generate_random_number(priv_file_list[type].number_of_files - 1u);
+
         strcpy(ps, priv_file_list[type].directoryName);
         ps += strlen(priv_file_list[type].directoryName);
         *ps = '/';
@@ -268,10 +281,10 @@ Private Boolean setupBitmapLoad(const char * path)
     Boolean res = FALSE;
     UINT bytes_read;
 
-	char str[64] = MOUNT_POINT;
-	strcat(str, path);
+	//char str[64] = MOUNT_POINT;
+	//strcat(str, path);
 
-    file_res = f_open(&priv_f_obj, str, FA_READ);
+    file_res = f_open(&priv_f_obj, path, FA_READ);
 
     if (file_res == FR_OK)
     {
@@ -283,9 +296,18 @@ Private Boolean setupBitmapLoad(const char * path)
             /* TODO : Consider, if we should always just ignore a larger bitmap?? Initially lets just get the BMP reading to work properly and then we can start looking at special cases like this. */
             if (priv_bmp_header.width_px <= MAX_BMP_LINE_LENGTH)
             {
-                res = TRUE;
+                printf("Successfully started loading %s, H : %ld, W : %ld\n", path, priv_bmp_header.height_px, priv_bmp_header.width_px);
+            	res = TRUE;
+            }
+            else
+            {
+            	printf("File %s does not fit in memory!!!  H : %ld, W : %ld \n", path, priv_bmp_header.height_px, priv_bmp_header.width_px);
             }
         }
+    }
+    else
+    {
+    	printf("Setup bitmap load failed  for : %s\n", path);
     }
 
     return res;
@@ -320,7 +342,7 @@ Private Boolean resumeBitmapRead(void)
         {
             for (x = 0u; x < line_px_data_len; x+=3u )
             {
-                *priv_dest_ptr++ = CONVERT_888RGB_TO_565BGR(priv_bmp_line_buffer[x+2], priv_bmp_line_buffer[x+1], priv_bmp_line_buffer[x]);
+                *priv_dest_ptr++ = CONVERT_888RGB_TO_565RGB(priv_bmp_line_buffer[x+2], priv_bmp_line_buffer[x+1], priv_bmp_line_buffer[x]);
             }
         }
 

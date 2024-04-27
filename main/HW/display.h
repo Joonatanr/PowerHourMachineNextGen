@@ -12,7 +12,7 @@
 #include "Bitmaps/Bitmaps.h"
 #include "ColorScheme.h"
 
-#define CONVERT_888RGB_TO_565BGR(r, g, b) ((r >> 3) | ((g >> 2) << 5) | ((b >> 3) << 11))
+//#define CONVERT_888RGB_TO_565BGR(r, g, b) ((r >> 3) | ((g >> 2) << 5) | ((b >> 3) << 11))
 
 
 #ifndef MIN

@@ -516,6 +516,7 @@ Public U16 isBuzzerEnabled(void)
 Private void bitmapLoadedCallback(void)
 {
     priv_is_bitmap_loaded = TRUE;
+    printf("Bitmap loading complete\n");
 }
 
 Public volatile Boolean debug_is_bmp_error = FALSE;
@@ -525,7 +526,13 @@ Private void handlePreemptiveBitmapLoad(void)
     U16 * buffer_ptr = priv_sd_card_image_buffer;
 
     priv_is_bitmap_loaded = FALSE;
+    printf("Call from PowerHourMachine : %d\n", priv_file_type_to_load);
     BitmapHandler_getRandomBitmapForCategory(priv_file_type_to_load, priv_bitmap_name_buf);
+    printf("Starting to load bitmap %s\n", priv_bitmap_name_buf);
+
+    /* TODO : Remove*/
+    vTaskDelay(200 / portTICK_PERIOD_MS);
+
     if (BitmapHandler_StartCyclicLoad(priv_bitmap_name_buf, buffer_ptr, bitmapLoadedCallback) == FALSE)
     {
         debug_is_bmp_error = TRUE;
@@ -606,7 +613,9 @@ Private Boolean genericIntroFunction(const IntroSequence * intro_ptr, U8 sec)
         display_clear();
         if (priv_is_bitmap_loaded)
         {
-            display_flushBuffer(0u, 0u, DISPLAY_WIDTH, DISPLAY_HEIGHT);
+            /* TODO : Take into account that an image may be slightly smaller!!!*/
+        	display_drawImage(0u, 0u, DISPLAY_WIDTH, DISPLAY_HEIGHT, priv_sd_card_image_buffer);
+        	//display_flushBuffer(0u, 0u, DISPLAY_WIDTH, DISPLAY_HEIGHT);
         }
         else
         {
