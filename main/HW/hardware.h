@@ -13,6 +13,6 @@
 void hardware_init(void);
 void hardware_main(void);
 
-uint16_t hardware_get_pot_value(void);
+extern uint16_t hardware_get_pot_value(uint8_t channel);
 
 #endif /* MAIN_HARDWARE_H_ */

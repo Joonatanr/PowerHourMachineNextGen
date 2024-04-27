@@ -40,48 +40,27 @@ void app_main(void)
 	/* Configure the peripheral according to the LED type */
     configure_led();
 
-    uint16_t pot_value;
-    uint8_t red;
-    uint8_t green;
-    uint8_t blue;
+    uint8_t red = 0;
+    uint8_t green = 0;
+    uint8_t blue = 0;
 
     while(1)
     {
     	vTaskDelay(50 / portTICK_PERIOD_MS);
-    	pot_value = hardware_get_pot_value();
-
-    	//blue = 0;
-    	//red = 16 - (pot_value / 256);
-    	//green = pot_value / 256;
 
     	if (isButton(BUTTON_RED))
     	{
     		red = 16;
     	}
-    	else
-    	{
-    		red = 0;
-    	}
-
-    	if (isButton(BUTTON_BLUE))
+    	else if(isButton(BUTTON_BLUE))
     	{
     		blue = 16;
     	}
-    	else
-    	{
-    		blue = 0;
-    	}
-
-    	if (isButton(BUTTON_GREEN))
+    	else if (isButton(BUTTON_GREEN))
     	{
     		green = 16;
     	}
-    	else
-    	{
-    		green = 0;
-    	}
-
-    	if (isButton(BUTTON_BLACK))
+    	else if (isButton(BUTTON_BLACK))
     	{
     		green = 16;
     		red = 16;
@@ -89,7 +68,10 @@ void app_main(void)
     	}
     	else
     	{
-    		/* Do nothing. */
+    		/* Test the adc */
+    		red = hardware_get_pot_value(0) / 256;
+    		green = hardware_get_pot_value(1) / 256;
+    		blue = hardware_get_pot_value(2) / 256u;
     	}
 
 

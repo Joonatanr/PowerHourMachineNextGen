@@ -34,10 +34,11 @@
  *
  *****************************************************************************************************/
 Private adc_oneshot_unit_handle_t adc2_handle;
-Private int adc_raw[2][10];
+Private int adc_raw[4];
 
 Private const char *TAG = "PH Hardware";
-Private int priv_adc_result = 0;
+Private int priv_adc_results[4];
+
 
 
 /*****************************************************************************************************
@@ -82,7 +83,12 @@ Public void hardware_init(void)
 
     //-------------ADC2 Calibration Init---------------//
     adc_cali_handle_t adc2_cali_handle = NULL;
-    bool do_calibration2 = adc_calibration_init(ADC_UNIT_2, ADC_CHANNEL_4, ADC_ATTEN_DB_11, &adc2_cali_handle);
+
+    adc_calibration_init(ADC_UNIT_2, ADC_CHANNEL_4, ADC_ATTEN_DB_11, &adc2_cali_handle);
+    adc_calibration_init(ADC_UNIT_2, ADC_CHANNEL_5, ADC_ATTEN_DB_11, &adc2_cali_handle);
+    adc_calibration_init(ADC_UNIT_2, ADC_CHANNEL_6, ADC_ATTEN_DB_11, &adc2_cali_handle);
+    adc_calibration_init(ADC_UNIT_2, ADC_CHANNEL_7, ADC_ATTEN_DB_11, &adc2_cali_handle);
+
 
     //-------------ADC2 Config---------------//
     ESP_ERROR_CHECK(adc_oneshot_config_channel(adc2_handle, ADC_CHANNEL_4, &config));
@@ -92,16 +98,23 @@ Public void hardware_init(void)
 Public void hardware_main(void)
 {
     /* TODO : Move to ADC module. */
-	ESP_ERROR_CHECK(adc_oneshot_read(adc2_handle, ADC_CHANNEL_4, &adc_raw[1][0]));
-    priv_adc_result = adc_raw[1][0];
+	ESP_ERROR_CHECK(adc_oneshot_read(adc2_handle, ADC_CHANNEL_4, &adc_raw[0]));
+	ESP_ERROR_CHECK(adc_oneshot_read(adc2_handle, ADC_CHANNEL_5, &adc_raw[1]));
+	ESP_ERROR_CHECK(adc_oneshot_read(adc2_handle, ADC_CHANNEL_6, &adc_raw[2]));
+	ESP_ERROR_CHECK(adc_oneshot_read(adc2_handle, ADC_CHANNEL_7, &adc_raw[3]));
+
+    priv_adc_results[0] = adc_raw[0];
+    priv_adc_results[1] = adc_raw[1];
+    priv_adc_results[2] = adc_raw[2];
+    priv_adc_results[3] = adc_raw[3];
 
     /* TODO : Should the buttons 100msec cyclic run from here?? Might want to run that from same thread as the display driver. */
 }
 
 /** TODO */
-Public uint16_t hardware_get_pot_value(void)
+Public uint16_t hardware_get_pot_value(uint8_t channel)
 {
-	return priv_adc_result;
+	return priv_adc_results[channel];
 }
 
 
