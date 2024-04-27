@@ -826,7 +826,7 @@ Private void drawBeerShotLevel(U8 level)
     /* Lets begin with some very initial testing. */
     if(level < NUMBER_OF_BEERSHOT_IMAGES)
     {
-        drawBitmap(BEERSHOT_AREA_X_BEGIN + BEERSHOT_IMAGE_X_OFFSET, BEERSHOT_AREA_Y_BEGIN + BEERSHOT_IMAGE_Y_OFFSET, priv_beershot_images[level]);
+        drawBitmap(BEERSHOT_AREA_X_BEGIN + BEERSHOT_IMAGE_X_OFFSET, BEERSHOT_AREA_Y_BEGIN + BEERSHOT_IMAGE_Y_OFFSET, priv_beershot_images[level], true);
     }
 }
 

@@ -64,7 +64,7 @@ static void send_display_data(spi_device_handle_t spi, int xPos, int yPos, int w
 static void wait_display_data_finish(spi_device_handle_t spi);
 
 Private void drawRectangleInFrameBuf(int xPos, int yPos, int width, int height, uint16_t color);
-Private void drawBmpInFrameBuf(int xPos, int yPos, int width, int height, const uint16_t * data_buf);
+Private void drawBmpInFrameBuf(int xPos, int yPos, int width, int height, const uint16_t * data_buf, bool reverse_order);
 /*
 **====================================================================================
 ** Private variable declarations
@@ -159,12 +159,12 @@ void display_drawScreenBuffer(uint16_t *buf)
 
 void display_drawImage(uint16_t x, uint16_t y, uint16_t width, uint16_t height, const uint16_t *bmp_buf)
 {
-    //wait_display_data_finish(priv_spi_handle);
-    //send_display_data(priv_spi_handle, x, y, width, height, bmp_buf, false);
-	/* Use an implementation where we rely on the framebuffer flush. */
+	drawBmpInFrameBuf(x, y, width, height, bmp_buf, false);
+}
 
-	/* TODO : This is currently not working!!! */
-	drawBmpInFrameBuf(x, y, width, height, bmp_buf);
+void display_drawImageReverseOrder(uint16_t x, uint16_t y, uint16_t width, uint16_t height, const uint16_t *bmp_buf)
+{
+	drawBmpInFrameBuf(x, y, width, height, bmp_buf, true);
 }
 
 /* Draws a rectangle directly on the display at the given coordinates. */
@@ -268,7 +268,7 @@ Private void drawRectangleInFrameBuf(int xPos, int yPos, int width, int height, 
 }
 
 
-Private void drawBmpInFrameBuf(int xPos, int yPos, int width, int height, const uint16_t * data_buf)
+Private void drawBmpInFrameBuf(int xPos, int yPos, int width, int height, const uint16_t * data_buf, bool reverse_order)
 {
 	const uint16_t * data_ptr = data_buf;
 
@@ -278,7 +278,14 @@ Private void drawBmpInFrameBuf(int xPos, int yPos, int width, int height, const 
 		{
 			if ((x >= 0) && (x < DISPLAY_WIDTH) && (y >= 0) && (y < DISPLAY_HEIGHT))
 			{
-				SET_FRAME_BUF_PIXEL(priv_frame_buffer1, x, y, *data_ptr);
+				if(!reverse_order)
+				{
+					SET_FRAME_BUF_PIXEL(priv_frame_buffer1, x, y, *data_ptr);
+				}
+				else
+				{
+					SET_FRAME_BUF_PIXEL(priv_frame_buffer1, x, y, (((*data_ptr) << 8) | (*data_ptr) >> 8));
+				}
 			}
 			data_ptr++;
 		}

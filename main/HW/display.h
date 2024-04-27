@@ -62,6 +62,7 @@ extern void display_flushBufferAll(void);
 extern void display_drawBitmapCenter(const U16 * src_ptr, U16 centerPoint, U16 y, U16 width, U16 height);
 extern void display_drawTimageCenter(const tImage * image_ptr, U16 centerPoint, U16 y);
 extern void display_drawImage(uint16_t x, uint16_t y, uint16_t width, uint16_t height, const uint16_t *bmp_buf);
+extern void display_drawImageReverseOrder(uint16_t x, uint16_t y, uint16_t width, uint16_t height, const uint16_t *bmp_buf);
 extern void display_fill(U16 color);
 extern void display_drawRectangle(U16 x, U16 y, U16 width, U16 height, U16 line_width, U16 color);
 void display_fillRectangle(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t color);
