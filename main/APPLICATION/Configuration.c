@@ -59,7 +59,14 @@ Public void configuration_start(void)
     ESP_ERROR_CHECK( err );
 
     /* Load the configuration data from flash memory. */
-    loadConfig();
+    if(loadConfig() != ESP_OK)
+    {
+    	printf("Failed to load configuration\n");
+    }
+    else
+    {
+    	printf("Config loaded successfully\n");
+    }
 
     if (verifyConfig() == TRUE)
     {
@@ -173,6 +180,7 @@ Private esp_err_t loadConfig(void)
     err = nvs_open(STORAGE_NAMESPACE, NVS_READWRITE, &my_handle);
     if (err != ESP_OK)
     {
+    	printf("nvs open failed\n");
     	return err;
     }
 
@@ -181,6 +189,7 @@ Private esp_err_t loadConfig(void)
     err = nvs_get_blob(my_handle, "myConf", priv_conf.data, &required_size);
     if (err != ESP_OK && err != ESP_ERR_NVS_NOT_FOUND)
     {
+    	printf("Failed to get blob failed %d\n", err);
     	return err;
     }
 
@@ -214,6 +223,11 @@ Private esp_err_t storeConfig(void)
     }
 
     err = nvs_set_blob(my_handle, "myConf", priv_conf.data, CONFIG_SIZE);
+
+    if(err != ESP_OK)
+    {
+    	printf("Failed to store configuration\n");
+    }
 
 	// Commit
 	err = nvs_commit(my_handle);

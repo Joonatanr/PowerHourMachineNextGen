@@ -155,6 +155,10 @@ void Scheduler_SetActiveApplicationPause(Boolean pause)
 void Scheduler_cyclic(void)
 {
     U8 ix;
+
+    priv_app_task_timer++;
+    priv_task_timer++;
+
     U32 task_timer = priv_task_timer;
     U32 app_task_timer = priv_app_task_timer;
 
@@ -193,11 +197,6 @@ void Scheduler_cyclic(void)
     }
 }
 
-Public void Scheduler_50msec_timer(void)
-{
-    priv_app_task_timer++;
-    priv_task_timer++;
-}
 
 /**************************  Private functions ***********************/
 

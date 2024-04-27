@@ -1,7 +1,7 @@
 /*
  * Scheduler.h
  *
- *  Created on: 16. märts 2018
+ *  Created on: 16. mï¿½rts 2018
  *      Author: JRE
  */
 
@@ -45,7 +45,6 @@ typedef struct
 extern void Scheduler_initTasks(void);
 extern void Scheduler_cyclic(void);
 extern void Scheduler_StartTasks(void);
-extern void Scheduler_50msec_timer(void);
 
 extern void Scheduler_SetActiveApplication(Scheduler_LogicModuleEnum task);
 extern void Scheduler_StopActiveApplication(void);

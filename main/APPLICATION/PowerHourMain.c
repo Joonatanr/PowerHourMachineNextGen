@@ -21,6 +21,9 @@
 #include "pot.h"
 #include "random.h"
 
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+
 #define ENABLE_BORDERS
 
 //#define DISABLE_BUZZER_FOR_TESTING
@@ -267,7 +270,7 @@ Private BitmapHandler_FileCategory_t priv_file_type_to_load = FILES_NONE;
 Private char priv_bitmap_name_buf[64u];
 Private Boolean priv_is_bitmap_loaded = FALSE;
 
-
+Private uint16_t * priv_sd_card_image_buffer = NULL;
 
 /*****************************************************************************************************
  *
@@ -283,6 +286,12 @@ Public void powerHour_init(void)
 
     priv_state = CONTROLLER_INIT;
     priv_is_buzzer_enabled = configuration_getItem(CONFIG_ITEM_BUZZER);
+
+    if (priv_sd_card_image_buffer == NULL)
+    {
+    	priv_sd_card_image_buffer = heap_caps_malloc(DISPLAY_HEIGHT*DISPLAY_WIDTH*sizeof(uint16_t), MALLOC_CAP_32BIT);
+    	assert(priv_sd_card_image_buffer);
+    }
 
     SpecialTasks_init();
 }
@@ -513,7 +522,7 @@ Public volatile Boolean debug_is_bmp_error = FALSE;
 
 Private void handlePreemptiveBitmapLoad(void)
 {
-    U16 * buffer_ptr = display_get_frame_buffer();
+    U16 * buffer_ptr = priv_sd_card_image_buffer;
 
     priv_is_bitmap_loaded = FALSE;
     BitmapHandler_getRandomBitmapForCategory(priv_file_type_to_load, priv_bitmap_name_buf);

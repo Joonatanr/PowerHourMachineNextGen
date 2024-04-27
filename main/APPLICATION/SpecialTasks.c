@@ -53,13 +53,7 @@ typedef struct
     U16 number_of_array_items;
 } Task_Array_Descriptor;
 
-typedef enum
-{
-    DIANA,
-    MIRTEL,
 
-    NUMBER_OF_SISTERS
-} Migur_T;
 
 
 /*****************************************************************************************************
@@ -150,7 +144,6 @@ Private const Task_T priv_TextArrayGirlsLevel1[] =
      /* Strange cases, where somebody is playing on easy mode, but with maximum sexyness */
      {  "Girl closest to"           , "machine spins",         "the bottle"      ,  .nude_level = 0u, .sexy_level = 3u},
      {  "All girls find"            , "somebody to",           "kiss"            ,  .nude_level = 0u, .sexy_level = 3u},
-     {  "One girls must"            , "make out with",         "one Migur"       ,  .nude_level = 0u, .sexy_level = 3u},
 };
 Private U8 priv_TextArrayGirlsLevel1_counter[NUMBER_OF_ITEMS(priv_TextArrayGirlsLevel1)];
 
@@ -210,7 +203,6 @@ Private const Task_T priv_TextArrayAllLevel1[] =
 /* Tasks that need criteria. */
      {  "Everyone takes off"     , "one sock",                     NULL       ,   .nude_level = 1u, .sexy_level = 0u   },
      {  "Those that have"        , "french-kissed today",    "drink 3x"       ,   .nude_level = 0u, .sexy_level = 1u   },
-     {  "Everybody who has"      , "kissed a Migur",         "drinks vodka"   ,   .nude_level = 0u, .sexy_level = 1u   },
      {  "One closest to machine" , "gets slapped on",        "the ass"        ,   .nude_level = 0u, .sexy_level = 2u   },
 
 

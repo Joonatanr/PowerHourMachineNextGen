@@ -108,10 +108,25 @@ Private SelectionMenu StartMenu =
      .selected_item = 0u,
      .initial_select_func = NULL,
      .isCheckedMenu = FALSE,
-     .isTransparentMenu = TRUE, /* Just for experimenting, probably will not really use this. */
+     .isTransparentMenu = FALSE, /* Just for experimenting, probably will not really use this. */
 };
 
 /** End of Start Menu Items. */
+
+uint16_t priv_test_buf[10][15] =
+{
+		{ COLOR_BLUE, COLOR_RED, COLOR_RED, COLOR_RED, COLOR_RED, COLOR_RED, COLOR_RED, COLOR_RED, COLOR_RED, COLOR_BLUE   , COLOR_ORANGE, COLOR_ORANGE, COLOR_ORANGE, COLOR_ORANGE, COLOR_ORANGE },
+		{ COLOR_BLUE, COLOR_BLUE, COLOR_RED, COLOR_RED, COLOR_RED, COLOR_RED, COLOR_RED, COLOR_RED, COLOR_BLUE, COLOR_BLUE , COLOR_ORANGE, COLOR_ORANGE, COLOR_ORANGE, COLOR_ORANGE, COLOR_ORANGE},
+		{ COLOR_BLUE, COLOR_RED, COLOR_BLUE, COLOR_RED, COLOR_RED, COLOR_RED, COLOR_RED, COLOR_BLUE, COLOR_RED, COLOR_BLUE , COLOR_ORANGE, COLOR_ORANGE, COLOR_ORANGE, COLOR_ORANGE, COLOR_ORANGE},
+		{ COLOR_BLUE, COLOR_RED, COLOR_RED, COLOR_BLUE, COLOR_RED, COLOR_RED, COLOR_BLUE, COLOR_RED, COLOR_RED, COLOR_BLUE , COLOR_ORANGE, COLOR_ORANGE, COLOR_ORANGE, COLOR_ORANGE, COLOR_ORANGE},
+		{ COLOR_BLUE, COLOR_RED, COLOR_RED, COLOR_RED, COLOR_BLUE, COLOR_BLUE, COLOR_RED, COLOR_RED, COLOR_RED, COLOR_BLUE , COLOR_ORANGE, COLOR_ORANGE, COLOR_ORANGE, COLOR_ORANGE, COLOR_ORANGE},
+		{ COLOR_BLUE, COLOR_RED, COLOR_RED, COLOR_RED, COLOR_BLUE, COLOR_BLUE, COLOR_RED, COLOR_RED, COLOR_RED, COLOR_BLUE , COLOR_ORANGE, COLOR_ORANGE, COLOR_ORANGE, COLOR_ORANGE, COLOR_ORANGE},
+		{ COLOR_BLUE, COLOR_RED, COLOR_RED, COLOR_BLUE, COLOR_RED, COLOR_RED, COLOR_BLUE, COLOR_RED, COLOR_RED, COLOR_BLUE , COLOR_ORANGE, COLOR_ORANGE, COLOR_ORANGE, COLOR_ORANGE, COLOR_ORANGE},
+		{ COLOR_BLUE, COLOR_RED, COLOR_BLUE, COLOR_RED, COLOR_RED, COLOR_RED, COLOR_RED, COLOR_BLUE, COLOR_RED, COLOR_BLUE , COLOR_ORANGE, COLOR_ORANGE, COLOR_ORANGE, COLOR_ORANGE, COLOR_ORANGE},
+		{ COLOR_BLUE, COLOR_BLUE, COLOR_RED, COLOR_RED, COLOR_RED, COLOR_RED, COLOR_RED, COLOR_RED, COLOR_BLUE, COLOR_BLUE , COLOR_ORANGE, COLOR_ORANGE, COLOR_ORANGE, COLOR_ORANGE, COLOR_ORANGE},
+		{ COLOR_BLUE, COLOR_RED, COLOR_RED, COLOR_RED, COLOR_RED, COLOR_RED, COLOR_RED, COLOR_RED, COLOR_RED, COLOR_BLUE   , COLOR_ORANGE, COLOR_ORANGE, COLOR_ORANGE, COLOR_ORANGE, COLOR_ORANGE},
+};
+
 
 void app_main(void)
 {
@@ -132,17 +147,44 @@ void app_main(void)
 	/* Setup the TFT display. */
 	display_init();
 
+	vTaskDelay(100 / portTICK_PERIOD_MS);
+
+#if 0
+	backlight_set_level(100);
+	display_fill(COLOR_GREEN);
+	display_fillRectangle(0, 0, 40, 40, COLOR_BLUE);
+	display_fillRectangle(40, 40, 40, 40, COLOR_ORANGE);
+	display_drawImage(80, 80, 15, 10, &priv_test_buf[0][0]);
+	LcdWriter_drawChar('A', 0, 0, FONT_ARIAL_12);
+	display_flushBuffer(0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT);
+
 	vTaskDelay(1000 / portTICK_PERIOD_MS);
+	display_fill(COLOR_BLUE);
+	LcdWriter_drawColoredString("Hello World", 10, 10, FONT_ARIAL_16_BOLD, COLOR_RED, COLOR_GREEN);
+	display_flushBufferAll();
+
+	vTaskDelay(1000 / portTICK_PERIOD_MS);
+#endif
 
     /* Initialize the SD Card reader*/
 	sdCard_init();
 
+#if 0
     //Set up the configuration
     configuration_start();
+    /* Currently does not work!!! */
+    uint8_t brightness = configuration_getItem(CONFIG_ITEM_BRIGHTNESS);
+#else
+    /* TODO : Configuration does not work currently, so we fix it here. */
+    configuration_setItem(100, CONFIG_ITEM_BRIGHTNESS);
+    configuration_setItem(2, CONFIG_ITEM_TASK_FREQ);
+    configuration_setItem(1, CONFIG_ITEM_BUZZER);
+    configuration_setItem(0, CONFIG_ITEM_COLOR_SCHEME);
+
+    backlight_set_level(100);
+#endif
 
     ColorScheme_start();
-
-    backlight_set_level(configuration_getItem(CONFIG_ITEM_BRIGHTNESS));
 
     /* Initialize the main scheduler. */
     Scheduler_initTasks();
@@ -174,10 +216,16 @@ void app_main(void)
     /* We pass control over to the menu handler. */
     menu_enterMenu(&StartMenu, TRUE);
 
+	TickType_t xLastWakeTime;
+	const TickType_t xFrequency = 50u / portTICK_PERIOD_MS;
+
+	xLastWakeTime = xTaskGetTickCount ();
+
 	while(1)
 	{
-		vTaskDelay(50 / portTICK_PERIOD_MS);
+		vTaskDelayUntil( &xLastWakeTime, xFrequency );
 		Scheduler_cyclic();
+		display_flushBufferAll();
 	}
 }
 
@@ -196,18 +244,20 @@ Private void showStartScreen(void)
 #endif
 
     display_fill(disp_background_color);
-
-    BitmapHandler_LoadBitmap("test.bmp", display_get_frame_buffer());
     display_flushBuffer(0u, 0u, DISPLAY_WIDTH, DISPLAY_HEIGHT);
-    vTaskDelay(3000 / portTICK_PERIOD_MS);
 
-    LcdWriter_drawStringCenter("Power Hour", (DISPLAY_WIDTH / 2u) + 4u, 40u, FONT_ARIAL_16_BOLD, disp_text_color, disp_background_color);
-    LcdWriter_drawStringCenter(priv_version_string, (DISPLAY_WIDTH / 2u) + 4u, 60u, FONT_ARIAL_16_BOLD, disp_text_color, disp_background_color);
-    LcdWriter_drawStringCenter("GA Edition", (DISPLAY_WIDTH / 2u) + 4u, 80u, FONT_ARIAL_14_BOLD, disp_text_color, disp_background_color);
+    //BitmapHandler_LoadBitmap("/test.bmp", display_get_frame_buffer());
+    //display_flushBuffer(0u, 0u, DISPLAY_WIDTH, DISPLAY_HEIGHT);
 
     vTaskDelay(3000 / portTICK_PERIOD_MS);
 
+    LcdWriter_drawStringCenter("Power Hour", (DISPLAY_WIDTH / 2u) + 4u, 80u, FONT_ARIAL_16_BOLD, disp_text_color, disp_background_color);
+    LcdWriter_drawStringCenter(priv_version_string, (DISPLAY_WIDTH / 2u) + 4u, 100u, FONT_ARIAL_16_BOLD, disp_text_color, disp_background_color);
+    LcdWriter_drawStringCenter("GA Edition", (DISPLAY_WIDTH / 2u) + 4u, 120u, FONT_ARIAL_14_BOLD, disp_text_color, disp_background_color);
+
     display_flushBuffer(0u, 0u, DISPLAY_WIDTH, DISPLAY_HEIGHT);
+    vTaskDelay(6000 / portTICK_PERIOD_MS);
+
 }
 
 

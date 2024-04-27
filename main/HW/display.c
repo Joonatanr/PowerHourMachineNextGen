@@ -35,6 +35,8 @@
 #define PIN_NUM_DISPLAY_CS 4
 //#define PIN_NUM_BCKL       2
 
+#define SET_FRAME_BUF_PIXEL(buf, x, y, color) *((buf) + (x) + (320*(y)))=color
+
 /*
 **====================================================================================
 ** Private type definitions
@@ -61,7 +63,8 @@ static void lcd_init(spi_device_handle_t spi);
 static void send_display_data(spi_device_handle_t spi, int xPos, int yPos, int width, int height, const uint16_t *linedata, bool isBufferConstant);
 static void wait_display_data_finish(spi_device_handle_t spi);
 
-
+Private void drawRectangleInFrameBuf(int xPos, int yPos, int width, int height, uint16_t color);
+Private void drawBmpInFrameBuf(int xPos, int yPos, int width, int height, const uint16_t * data_buf);
 /*
 **====================================================================================
 ** Private variable declarations
@@ -71,7 +74,7 @@ static void wait_display_data_finish(spi_device_handle_t spi);
 DRAM_ATTR static const lcd_init_cmd_t st_init_cmds[]=
 {
     /* Memory Data Access Control, MX=MV=1, MY=ML=MH=0, RGB=0 */
-    {0x36, {(1 << 7)| (1<<5) }, 1},
+    {0x36, {(1 << 6)| (1<<5) }, 1},
     /* Interface Pixel Format, 16bits/pixel for RGB/MCU interface */
     {0x3A, {0x55}, 1},
     /* Porch Setting */
@@ -143,6 +146,7 @@ void display_init(void)
 
     /* Allocate memory for the main frame buffer. */
     priv_frame_buffer1 = heap_caps_malloc(DISPLAY_HEIGHT*DISPLAY_WIDTH*sizeof(uint16_t), MALLOC_CAP_DMA);
+    assert(priv_frame_buffer1);
 }
 
 
@@ -155,13 +159,18 @@ void display_drawScreenBuffer(uint16_t *buf)
 
 void display_drawImage(uint16_t x, uint16_t y, uint16_t width, uint16_t height, const uint16_t *bmp_buf)
 {
-    wait_display_data_finish(priv_spi_handle);
-    send_display_data(priv_spi_handle, x, y, width, height, bmp_buf, false);
+    //wait_display_data_finish(priv_spi_handle);
+    //send_display_data(priv_spi_handle, x, y, width, height, bmp_buf, false);
+	/* Use an implementation where we rely on the framebuffer flush. */
+
+	/* TODO : This is currently not working!!! */
+	drawBmpInFrameBuf(x, y, width, height, bmp_buf);
 }
 
 /* Draws a rectangle directly on the display at the given coordinates. */
 void display_fillRectangle(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t color)
 {
+#if 0
 	uint16_t buf_size = MIN(DISPLAY_MAX_TRANSFER_SIZE, height*width*sizeof(uint16_t));
 
 	wait_display_data_finish(priv_spi_handle);
@@ -173,11 +182,18 @@ void display_fillRectangle(uint16_t x, uint16_t y, uint16_t width, uint16_t heig
     }
 
 	send_display_data(priv_spi_handle, x, y, width, height, line_data, true);
+#else
+	/* We draw only into the frame buffer. */
+	drawRectangleInFrameBuf(x, y, width, height, color);
+#endif
 }
 
 Public void display_fill(U16 color)
 {
-    display_fillRectangle(0,0,DISPLAY_WIDTH,DISPLAY_HEIGHT,color);
+	//display_fillRectangle(0,0,DISPLAY_WIDTH,DISPLAY_HEIGHT,color);
+	/* Rely on framebuffer... */
+	drawRectangleInFrameBuf(0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT, color);
+
 }
 
 Public void display_clear(void)
@@ -185,15 +201,17 @@ Public void display_clear(void)
     display_fill(disp_background_color);
 }
 
-Public U16 * display_get_frame_buffer(void)
+Public void display_flushBufferAll(void)
 {
-	return priv_frame_buffer1;
+	display_flushBuffer(0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT);
 }
 
 Public void display_flushBuffer(U16 x, U16 y, U16 width, U16 height)
 {
 	//display_drawScreenBuffer(priv_frame_buffer1);
-	display_drawImage(x, y, width, height, priv_frame_buffer1);
+	//display_drawImage(x, y, width, height, priv_frame_buffer1);
+	/* TODO */
+	display_drawScreenBuffer(priv_frame_buffer1);
 }
 
 
@@ -237,6 +255,37 @@ Public void display_drawTimageCenter(const tImage * image_ptr, U16 centerPoint, 
 ** Private function definitions
 **====================================================================================
 */
+
+Private void drawRectangleInFrameBuf(int xPos, int yPos, int width, int height, uint16_t color)
+{
+	for (int x = xPos; ((x < (xPos+width)) && (x < 320)); x++)
+	{
+		for (int y = yPos; ((y < (yPos+height)) && (y < 240)); y++)
+		{
+			SET_FRAME_BUF_PIXEL(priv_frame_buffer1, x, y, color);
+		}
+	}
+}
+
+
+Private void drawBmpInFrameBuf(int xPos, int yPos, int width, int height, const uint16_t * data_buf)
+{
+	const uint16_t * data_ptr = data_buf;
+
+	for (int y = yPos; (y < (yPos + height)); y++)
+	{
+		for (int x = xPos; (x < (xPos + width)); x++)
+		{
+			if ((x >= 0) && (x < DISPLAY_WIDTH) && (y >= 0) && (y < DISPLAY_HEIGHT))
+			{
+				SET_FRAME_BUF_PIXEL(priv_frame_buffer1, x, y, *data_ptr);
+			}
+			data_ptr++;
+		}
+	}
+}
+
+
 //This function is called (in irq context!) just before a transmission starts. It will
 //set the D/C line to the value indicated in the user field.
 static void lcd_spi_pre_transfer_callback(spi_transaction_t *t)
