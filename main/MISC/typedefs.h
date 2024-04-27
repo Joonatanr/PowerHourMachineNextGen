@@ -76,8 +76,12 @@ typedef enum { FALSE, TRUE } Boolean;
 #define BIT_6  0x40u
 #define BIT_7  0x80u
 
+#ifndef MIN
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
+#endif
+#ifndef MAX
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
+#endif
 
 #define Private static
 #define Public

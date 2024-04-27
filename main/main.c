@@ -1,5 +1,3 @@
-
-
 #include "typedefs.h"
 
 #include "driver/gpio.h"
@@ -12,15 +10,16 @@
 #include "hardware.h"
 #include "buttons.h"
 #include "pot.h"
+#include "display.h"
+#include "SdCardHandler.h"
 
+/* For debugging */
+Private led_strip_handle_t led_strip;
+Private const char *TAG = "PH Main";
 #define BLINK_GPIO 48u
-#define BLINK_PERIOD 1000
-
-static led_strip_handle_t led_strip;
-static const char *TAG = "PH Main";
 
 
-static void configure_led(void);
+Private void configure_led(void);
 void hw_task(void *pvParameter);
 
 
@@ -40,59 +39,68 @@ void app_main(void)
 	/* Configure the peripheral according to the LED type */
     configure_led();
 
-    uint8_t red = 0;
-    uint8_t green = 0;
-    uint8_t blue = 0;
+	/* Setup the TFT display. */
+	display_init();
 
-#if 1
-    while(1)
-    {
-    	vTaskDelay(50 / portTICK_PERIOD_MS);
-    	vTaskDelay(1000 / portTICK_PERIOD_MS);
+	vTaskDelay(1000 / portTICK_PERIOD_MS);
 
-    	if (isButton(BUTTON_RED))
-    	{
-    		red = 16;
-    	}
-    	else if(isButton(BUTTON_BLUE))
-    	{
-    		blue = 16;
-    	}
-    	else if (isButton(BUTTON_GREEN))
-    	{
-    		green = 16;
-    	}
-    	else if (isButton(BUTTON_BLACK))
-    	{
-    		green = 16;
-    		red = 16;
-    		blue = 16;
-    	}
-    	else
-    	{
-    		/* Test the adc */
-    		red = pot_getSelectedRange(POTENTIOMETER_1) * 4;
-    		green = pot_getSelectedRange(POTENTIOMETER_2) * 4;
-    		blue = pot_getSelectedRange(POTENTIOMETER_3) * 4;
-    	}
+    /* Initialize the SD Card reader*/
+	sdCard_init();
 
-    	led_strip_set_pixel(led_strip, 0, red, green, blue);
-    	/* Refresh the strip to send data */
-        led_strip_refresh(led_strip);
-    }
-#else
+#if 0
+    //Set up the configuration
+    configuration_start();
 
-    while(1)
-    {
-    	vTaskDelay(1000 / portTICK_PERIOD_MS);;
-    	printf("Adc1 : %d\n", pot_getCurrentMeasurement(POTENTIOMETER_1));
-    	printf("Adc2 : %d\n", pot_getCurrentMeasurement(POTENTIOMETER_2));
-    	printf("Adc3 : %d\n", pot_getCurrentMeasurement(POTENTIOMETER_3));
-    	printf("Adc4 : %d\n", pot_getCurrentMeasurement(POTENTIOMETER_4));
+    ColorScheme_start();
+    backlight_set_level(configuration_getItem(CONFIG_ITEM_BRIGHTNESS));
 
+    /* Initialize the main scheduler. */
+    Scheduler_initTasks();
 
-    }
+    timer_delay_msec(100);
+
+    //Start all scheduler task
+    Scheduler_StartTasks();
+    timer_delay_msec(100);
+
+#ifdef POT_TEST
+    timer_delay_msec(200u);
+    pot_test();
 #endif
+
+#ifdef STR_TEST
+    str_test();
+    timer_delay_msec(10000);
+#endif
+
+#ifdef STR_LENGTH_TEST
+    SpecialTask_StringLengthSanityTest();
+    timer_delay_msec(5000);
+#endif
+
+    //We show the initial start screen for a while.
+    showStartScreen();
+
+    /* We pass control over to the menu handler. */
+    menu_enterMenu(&StartMenu, TRUE);
+
+    /* Sleeping when not in use */
+	for(;;)
+	{
+	    /* Trap CPU... */
+	    if (priv_50msec_flag == 1u)
+	    {
+	        priv_50msec_flag = 0u;
+	        timer_50msec_callback();
+	    }
+	}
+#endif
+
+	while(1)
+	{
+		vTaskDelay(50 / portTICK_PERIOD_MS);
+		/* TODO : Main thread runs here. */
+	}
 }
 
 
@@ -106,7 +114,7 @@ void hw_task(void *pvParameter)
   }
 }
 
-
+/* Onboard RGB LED is used for debugging purposes. */
 static void configure_led(void)
 {
     ESP_LOGI(TAG, "Example configured to blink addressable LED!");

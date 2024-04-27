@@ -6,13 +6,19 @@ idf_component_register(
     main.c 
     HW/hardware.c
     HW/buttons.c
-    HW/pot.c 
-    MISC/misc.c   
+    HW/pot.c
+    HW/display.c 
+    MISC/misc.c
+    APPLICATION/SdCardHandler.c  
     # list the source files of this component
     
     INCLUDE_DIRS 
     HW 
-    MISC        
+    MISC
+    APPLICATION
+    APPLICATION/Bitmaps
+    APPLICATION/Fonts
+    APPLICATION/Menus     
     # optional, add here public include directories
     
     PRIV_INCLUDE_DIRS   # optional, add here private include directories
