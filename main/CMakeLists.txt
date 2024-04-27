@@ -12,6 +12,7 @@ idf_component_register(
     HW/buzzer.c
     HW/systimer.c
     HW/random.c 
+    HW/spi_handler.c
     MISC/misc.c
     APPLICATION/SdCardHandler.c
     APPLICATION/Configuration.c

@@ -14,7 +14,7 @@
 #include "buttons.h"
 #include "pot.h"
 #include "backlight.h"
-
+#include "spi_handler.h"
 #include "esp_log.h"
 #include "esp_timer.h"
 
@@ -62,6 +62,8 @@ Public void hardware_init(void)
 	pot_init();
 
 	backlight_init();
+
+	spi_handler_init();
 }
 
 /* Runs every 100 ms. */
