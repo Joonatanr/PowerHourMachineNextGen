@@ -10,14 +10,10 @@
 #include "freertos/task.h"
 
 #include "hardware.h"
+#include "buttons.h"
 
 #define BLINK_GPIO 48u
 #define BLINK_PERIOD 1000
-
-#define BUTTON_1 	39u
-#define BUTTON_2 	38u
-#define BUTTON_3 	47u
-#define BUTTON_4 	41u
 
 static uint8_t s_led_state = 0;
 static led_strip_handle_t led_strip;
@@ -25,9 +21,6 @@ static const char *TAG = "PH Main";
 
 
 static void configure_led(void);
-static void configure_buttons(void);
-
-static void blink_led(void);
 void hw_task(void *pvParameter);
 
 
@@ -46,7 +39,6 @@ void app_main(void)
 
 	/* Configure the peripheral according to the LED type */
     configure_led();
-    configure_buttons();
 
     uint16_t pot_value;
     uint8_t red;
@@ -62,7 +54,7 @@ void app_main(void)
     	//red = 16 - (pot_value / 256);
     	//green = pot_value / 256;
 
-    	if (gpio_get_level(BUTTON_1) == 0)
+    	if (isButton(BUTTON_RED))
     	{
     		red = 16;
     	}
@@ -71,7 +63,7 @@ void app_main(void)
     		red = 0;
     	}
 
-    	if (gpio_get_level(BUTTON_2) == 0)
+    	if (isButton(BUTTON_BLUE))
     	{
     		blue = 16;
     	}
@@ -80,7 +72,7 @@ void app_main(void)
     		blue = 0;
     	}
 
-    	if (gpio_get_level(BUTTON_3) == 0)
+    	if (isButton(BUTTON_GREEN))
     	{
     		green = 16;
     	}
@@ -89,7 +81,7 @@ void app_main(void)
     		green = 0;
     	}
 
-    	if (gpio_get_level(BUTTON_4) == 0)
+    	if (isButton(BUTTON_BLACK))
     	{
     		green = 16;
     		red = 16;
@@ -105,20 +97,6 @@ void app_main(void)
     	/* Refresh the strip to send data */
         led_strip_refresh(led_strip);
     }
-
-#if 0
-    while (1)
-    {
-        blink_led();
-        /* Toggle the LED state */
-        s_led_state++;
-        if (s_led_state > 5u)
-        {
-        	s_led_state = 0u;
-        }
-        vTaskDelay(BLINK_PERIOD / portTICK_PERIOD_MS);
-    }
-#endif
 }
 
 
@@ -126,7 +104,7 @@ void hw_task(void *pvParameter)
 {
   while(1)
   {
-	  vTaskDelay(50 / portTICK_PERIOD_MS);
+	  vTaskDelay(100 / portTICK_PERIOD_MS);
 	  /* Call the thread every 20 milliseconds, hopefully... */
 	  hardware_main();
   }
@@ -147,48 +125,4 @@ static void configure_led(void)
     ESP_ERROR_CHECK(led_strip_new_rmt_device(&strip_config, &rmt_config, &led_strip));
     /* Set all LED off to clear all pixels */
     led_strip_clear(led_strip);
-}
-
-static void configure_buttons(void)
-{
-	gpio_set_direction(BUTTON_1, GPIO_MODE_INPUT);
-	gpio_set_direction(BUTTON_2, GPIO_MODE_INPUT);
-	gpio_set_direction(BUTTON_3, GPIO_MODE_INPUT);
-	gpio_set_direction(BUTTON_4, GPIO_MODE_INPUT);
-}
-
-
-static void blink_led(void)
-{
-    /* If the addressable LED is enabled */
-	switch(s_led_state)
-    {
-		case 0:
-		/* Set the LED pixel using RGB from 0 (0%) to 255 (100%) for each color */
-	    	led_strip_set_pixel(led_strip, 0, 0, 0, 16);
-	    	break;
-		case 1:
-		/* Set the LED pixel using RGB from 0 (0%) to 255 (100%) for each color */
-	    	led_strip_set_pixel(led_strip, 0, 0, 16, 0);
-	    	break;
-		case 2:
-		/* Set the LED pixel using RGB from 0 (0%) to 255 (100%) for each color */
-	    	led_strip_set_pixel(led_strip, 0, 16, 0, 0);
-	    	break;
-		case 3:
-		/* Set the LED pixel using RGB from 0 (0%) to 255 (100%) for each color */
-	    	led_strip_set_pixel(led_strip, 0, 0, 8, 8);
-	    	break;
-		case 4:
-		/* Set the LED pixel using RGB from 0 (0%) to 255 (100%) for each color */
-	    	led_strip_set_pixel(led_strip, 0, 16, 16, 0);
-	    	break;
-		case 5:
-		/* Set the LED pixel using RGB from 0 (0%) to 255 (100%) for each color */
-	    	led_strip_set_pixel(led_strip, 0, 16, 0, 16);
-	    	break;
-    }
-
-    /* Refresh the strip to send data */
-            led_strip_refresh(led_strip);
 }
