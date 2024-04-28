@@ -33,7 +33,7 @@
 #define CLOCK_Y_OFFSET 15u
 #define CLOCK_LETTER_SPACING 23u
 
-#define BEERSHOT_IMAGE_X_OFFSET 3u
+#define BEERSHOT_IMAGE_X_OFFSET 18u
 #define BEERSHOT_IMAGE_Y_OFFSET 15u
 
 #define TEXT_X_OFFSET 3u
@@ -46,17 +46,17 @@
 #define CLOCK_AREA_X_BEGIN  0u
 #define CLOCK_AREA_Y_BEGIN  0u
 #define CLOCK_AREA_X_END    200u
-#define CLOCK_AREA_Y_END    160u
+#define CLOCK_AREA_Y_END    150u
 
 /* BEERSHOT area dimensions */
 #define BEERSHOT_AREA_X_BEGIN (CLOCK_AREA_X_END + BORDER_WIDTH)
 #define BEERSHOT_AREA_Y_BEGIN 0u
-#define BEERSHOT_AREA_X_END DISPLAY_WIDTH - 1u
-#define BEERSHOT_AREA_Y_END CLOCK_AREA_Y_END
+#define BEERSHOT_AREA_X_END DISPLAY_WIDTH
+#define BEERSHOT_AREA_Y_END DISPLAY_HEIGHT
 
 /* Text area dimensions */
 #define TEXT_AREA_X_BEGIN 0u
-#define TEXT_AREA_X_END   (DISPLAY_WIDTH - 1u)
+#define TEXT_AREA_X_END   BEERSHOT_AREA_X_BEGIN - BORDER_WIDTH
 #define TEXT_AREA_Y_BEGIN (CLOCK_AREA_Y_END + BORDER_WIDTH)
 #define TEXT_AREA_Y_END DISPLAY_HEIGHT - 1u
 
@@ -768,7 +768,7 @@ Private void drawEventText(const ControllerEvent* event)
 Private void drawBorders(void)
 {
     display_fillRectangle(CLOCK_AREA_X_BEGIN, CLOCK_AREA_Y_END, DISPLAY_WIDTH, BORDER_WIDTH, disp_text_color);
-    display_fillRectangle(CLOCK_AREA_X_END, CLOCK_AREA_Y_BEGIN, BORDER_WIDTH, CLOCK_AREA_Y_END, disp_text_color);
+    display_fillRectangle(CLOCK_AREA_X_END, CLOCK_AREA_Y_BEGIN, BORDER_WIDTH, DISPLAY_HEIGHT, disp_text_color);
 }
 
 
@@ -846,7 +846,7 @@ Private void drawBeerShotLevel(U8 level)
 
 Private void drawBeerShotBackground(void)
 {
-    display_fillRectangle(BEERSHOT_AREA_X_BEGIN, BEERSHOT_AREA_Y_BEGIN, BEERSHOT_AREA_X_END - BEERSHOT_AREA_X_BEGIN, BEERSHOT_AREA_Y_END - BEERSHOT_AREA_Y_BEGIN, COLOR_BLACK);
+    display_fillRectangle(BEERSHOT_AREA_X_BEGIN, BEERSHOT_AREA_Y_BEGIN, BEERSHOT_AREA_X_END - BEERSHOT_AREA_X_BEGIN, BEERSHOT_AREA_Y_END - BEERSHOT_AREA_Y_BEGIN, COLOR_WHITE);
 }
 
 
