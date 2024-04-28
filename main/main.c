@@ -171,8 +171,6 @@ void app_main(void)
 
     //Set up the configuration
     configuration_start();
-    uint8_t brightness = configuration_getItem(CONFIG_ITEM_BRIGHTNESS);
-    backlight_set_level(brightness);
 
     ColorScheme_start();
 
@@ -236,17 +234,21 @@ Private void showStartScreen(void)
     display_fill(disp_background_color);
     display_flushBuffer(0u, 0u, DISPLAY_WIDTH, DISPLAY_HEIGHT);
 
+    /* Lets turn on the backlight here when we actually have something to show already. */
+    uint8_t brightness = configuration_getItem(CONFIG_ITEM_BRIGHTNESS);
+    backlight_set_level(brightness);
+
     //BitmapHandler_LoadBitmap("/test.bmp", display_get_frame_buffer());
     //display_flushBuffer(0u, 0u, DISPLAY_WIDTH, DISPLAY_HEIGHT);
 
-    vTaskDelay(3000 / portTICK_PERIOD_MS);
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
     //LcdWriter_drawChar('0', 10, 10, FONT_TNR_HUGE_NUMBERS);
     LcdWriter_drawStringCenter("Power Hour", (DISPLAY_WIDTH / 2u) + 4u, 80u, FONT_LARGE_FONT, disp_text_color, disp_background_color);
     LcdWriter_drawStringCenter(priv_version_string, (DISPLAY_WIDTH / 2u) + 4u, 110u, FONT_MEDIUM_FONT, disp_text_color, disp_background_color);
-    LcdWriter_drawStringCenter("GA Edition", (DISPLAY_WIDTH / 2u) + 4u, 135u, FONT_LARGE_FONT, disp_text_color, disp_background_color);
+    LcdWriter_drawStringCenter("Enginaator Edition", (DISPLAY_WIDTH / 2u) + 4u, 135u, FONT_LARGE_FONT, disp_text_color, disp_background_color);
 
     display_flushBuffer(0u, 0u, DISPLAY_WIDTH, DISPLAY_HEIGHT);
-    vTaskDelay(6000 / portTICK_PERIOD_MS);
+    vTaskDelay(5000 / portTICK_PERIOD_MS);
 
 }
 

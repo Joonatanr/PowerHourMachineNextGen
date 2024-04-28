@@ -45,10 +45,10 @@ Private const pot_range_T priv_pot_ranges[NUMBER_OF_POT_RANGES] =
 
 Private const adc_channel_t priv_channels[NUMBER_OF_DEFINED_POTENTIOMETERS] =
 {
-		ADC_CHANNEL_4,
+		ADC_CHANNEL_7,
 		ADC_CHANNEL_5,
 		ADC_CHANNEL_6,
-		ADC_CHANNEL_7
+		ADC_CHANNEL_4
 };
 
 

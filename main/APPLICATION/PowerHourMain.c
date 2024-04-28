@@ -38,8 +38,8 @@
 #define BEERSHOT_IMAGE_Y_OFFSET 15u
 
 #define TEXT_X_OFFSET 3u
-#define TEXT_Y_OFFSET 3u
-#define TEXT_LINE_DISTANCE 18u
+#define TEXT_Y_OFFSET 10u
+#define TEXT_LINE_DISTANCE 20u
 
 #define BORDER_WIDTH 2u
 
@@ -177,6 +177,7 @@ Private void handleMessageBoxResponse(MsgBox_Response resp);
 
 Private void handlePotValuesChanged(void);
 Private void drawPotentiometerData(void);
+Private void drawBargraph(U16 xloc, U16 yloc, U16 width, U16 height, U16 percentage);
 
 /*****************************************************************************************************
  *
@@ -388,7 +389,6 @@ Public void powerHour_start(void)
 }
 
 
-
 Public void powerHour_cyclic1000msec(void)
 {
     U8 ix;
@@ -466,7 +466,13 @@ Public void powerHour_cyclic1000msec(void)
 
             if (priv_is_pot_override_active)
             {
+            	priv_pot_override_counter--;
             	drawPotentiometerData();
+
+            	if (priv_pot_override_counter == 0)
+            	{
+            		priv_is_pot_override_active = false;
+            	}
             }
             else
             {
@@ -1037,15 +1043,90 @@ Private void handlePotValuesChanged(void)
 	}
 }
 
+#define NUMBER_OF_TICKS 5
+#define BARGRAPH_BEGIN_X TEXT_AREA_X_BEGIN + 50u
+#define BARGRAPH_WIDTH TEXT_AREA_WIDTH - (BARGRAPH_BEGIN_X)
+#define TICK_INTERVAL (BARGRAPH_WIDTH) / (NUMBER_OF_TICKS - 1u)
+
 Private void drawPotentiometerData(void)
 {
+	U16 ix;
+	int girls_range;
+	int boys_range;
+	int sexy_range;
+	int nude_range;
+
 	/* Idea is to replace the whole area with a potentiometer box for a while... */
-	priv_pot_override_counter--;
 
-	display_fillRectangle(TEXT_AREA_X_BEGIN, TEXT_AREA_Y_BEGIN, TEXT_AREA_WIDTH , TEXT_AREA_HEIGHT, COLOR_ORANGE);
 
-	if (priv_pot_override_counter == 0)
+	display_fillRectangle(TEXT_AREA_X_BEGIN, TEXT_AREA_Y_BEGIN, TEXT_AREA_WIDTH , TEXT_AREA_HEIGHT, disp_background_color);
+
+
+	/* Draw line 0 */
+	LcdWriter_drawColoredString("Girls:", TEXT_X_OFFSET, TEXT_AREA_Y_BEGIN + TEXT_Y_OFFSET , FONT_SMALL_FONT, disp_ph_prompt_text_color, disp_background_color);
+
+	/* Draw line 1 */
+	LcdWriter_drawColoredString("Guys:",   TEXT_X_OFFSET, TEXT_AREA_Y_BEGIN + TEXT_Y_OFFSET + (1u * TEXT_LINE_DISTANCE), FONT_SMALL_FONT, disp_ph_prompt_text_color, disp_background_color);
+
+	/* Draw line 2 */
+	LcdWriter_drawColoredString("Sexy:",   TEXT_X_OFFSET, TEXT_AREA_Y_BEGIN + TEXT_Y_OFFSET + (2u * TEXT_LINE_DISTANCE) , FONT_SMALL_FONT, disp_ph_prompt_text_color, disp_background_color);
+
+	/* Draw line 3 */
+	LcdWriter_drawColoredString("Strip:", TEXT_X_OFFSET, TEXT_AREA_Y_BEGIN + TEXT_Y_OFFSET  + (3u * TEXT_LINE_DISTANCE), FONT_SMALL_FONT, disp_ph_prompt_text_color, disp_background_color);
+
+	/* Draw the tickmarks */
+	for (ix = 0u; ix < NUMBER_OF_TICKS; ix++)
 	{
-		priv_is_pot_override_active = false;
+		display_fillRectangle(BARGRAPH_BEGIN_X - 3u + (ix * TICK_INTERVAL), TEXT_AREA_Y_BEGIN , 2u, 5u, disp_text_color);
 	}
+
+	/* Draw the graphs. */
+#if 1
+	girls_range = pot_getSelectedRange(POTENTIOMETER_GIRLS);
+	boys_range = pot_getSelectedRange(POTENTIOMETER_GUYS);
+	sexy_range = pot_getSelectedRange(POTENTIOMETER_SEXY_LEVEL);
+	nude_range = pot_getSelectedRange(POTENTIOMETER_NUDE_LEVEL);
+
+	drawBargraph(BARGRAPH_BEGIN_X, TEXT_AREA_Y_BEGIN + TEXT_Y_OFFSET, BARGRAPH_WIDTH, 6u, (girls_range + 1) * 25);
+	drawBargraph(BARGRAPH_BEGIN_X, TEXT_AREA_Y_BEGIN + TEXT_Y_OFFSET + (1u * TEXT_LINE_DISTANCE), BARGRAPH_WIDTH, 6u, (boys_range + 1) * 25);
+	drawBargraph(BARGRAPH_BEGIN_X, TEXT_AREA_Y_BEGIN + TEXT_Y_OFFSET + (2u * TEXT_LINE_DISTANCE), BARGRAPH_WIDTH, 6u, (sexy_range + 1) * 25);
+	drawBargraph(BARGRAPH_BEGIN_X, TEXT_AREA_Y_BEGIN + TEXT_Y_OFFSET + (3u * TEXT_LINE_DISTANCE), BARGRAPH_WIDTH, 6u, (nude_range + 1) * 25);
+#else
+	/* Experimental : Here we can show the values in real time. */
+	girls_range = pot_getCurrentMeasurement(POTENTIOMETER_GIRLS) / 41;
+	boys_range =  pot_getCurrentMeasurement(POTENTIOMETER_GUYS) / 41;
+	sexy_range =  pot_getCurrentMeasurement(POTENTIOMETER_SEXY_LEVEL) / 41;
+	nude_range =  pot_getCurrentMeasurement(POTENTIOMETER_NUDE_LEVEL) / 41;
+
+	drawBargraph(BARGRAPH_BEGIN_X, TEXT_AREA_Y_BEGIN + TEXT_Y_OFFSET, BARGRAPH_WIDTH, 6u, girls_range);
+	drawBargraph(BARGRAPH_BEGIN_X, TEXT_AREA_Y_BEGIN + TEXT_Y_OFFSET + (1u * TEXT_LINE_DISTANCE), BARGRAPH_WIDTH, 6u, boys_range);
+	drawBargraph(BARGRAPH_BEGIN_X, TEXT_AREA_Y_BEGIN + TEXT_Y_OFFSET + (2u * TEXT_LINE_DISTANCE), BARGRAPH_WIDTH, 6u, sexy_range);
+	drawBargraph(BARGRAPH_BEGIN_X, TEXT_AREA_Y_BEGIN + TEXT_Y_OFFSET + (3u * TEXT_LINE_DISTANCE), BARGRAPH_WIDTH, 6u, nude_range);
+#endif
+}
+
+
+Private void drawBargraph(U16 xloc, U16 yloc, U16 width, U16 height, U16 percentage)
+{
+	U16 full_line_width;
+
+	full_line_width = (percentage * width) / 100;
+
+    //Draw the line
+    /* We clear it first. */
+    display_fillRectangle(xloc, yloc, width, height , COLOR_DARKGREY);
+
+    /* Then draw the actual line. */
+    if(percentage <= 50)
+    {
+    	display_fillRectangle(xloc, yloc , full_line_width, height , COLOR_GREEN);
+    }
+    else if(percentage <= 75)
+    {
+    	display_fillRectangle(xloc, yloc , full_line_width, height , COLOR_YELLOW);
+    }
+    else
+    {
+    	display_fillRectangle(xloc, yloc , full_line_width, height , COLOR_RED);
+    }
 }
