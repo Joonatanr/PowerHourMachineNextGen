@@ -169,20 +169,10 @@ void app_main(void)
     /* Initialize the SD Card reader*/
 	sdCard_init();
 
-#if 0
     //Set up the configuration
     configuration_start();
-    /* Currently does not work!!! */
     uint8_t brightness = configuration_getItem(CONFIG_ITEM_BRIGHTNESS);
-#else
-    /* TODO : Configuration does not work currently, so we fix it here. */
-    configuration_setItem(100, CONFIG_ITEM_BRIGHTNESS);
-    configuration_setItem(2, CONFIG_ITEM_TASK_FREQ);
-    configuration_setItem(1, CONFIG_ITEM_BUZZER);
-    configuration_setItem(0, CONFIG_ITEM_COLOR_SCHEME);
-
-    backlight_set_level(100);
-#endif
+    backlight_set_level(brightness);
 
     ColorScheme_start();
 

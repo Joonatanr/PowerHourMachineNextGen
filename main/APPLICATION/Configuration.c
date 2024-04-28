@@ -156,7 +156,7 @@ Private Boolean verifyConfig(void)
         res = TRUE;
     }
 
-    if (priv_conf.conf.brightness > 100u)
+    if (priv_conf.conf.brightness > 100u || (priv_conf.conf.brightness < 10))
     {
         priv_conf.conf.brightness = 60u;
         res = TRUE;
@@ -184,24 +184,15 @@ Private esp_err_t loadConfig(void)
     	return err;
     }
 
-    // Read the size of memory space required for blob
-    size_t required_size = 0;  // value will default to 0, if not set yet in NVS
-    err = nvs_get_blob(my_handle, "myConf", priv_conf.data, &required_size);
-    if (err != ESP_OK && err != ESP_ERR_NVS_NOT_FOUND)
-    {
-    	printf("Failed to get blob failed %d\n", err);
-    	return err;
-    }
-
-    if (required_size == 0)
-    {	/* Entry does not exist yet apparently. */
-    	err = nvs_set_blob(my_handle, "myConf", priv_conf.data, CONFIG_SIZE);
-    	if (err != ESP_OK) return err;
-
-    	// Commit
-    	err = nvs_commit(my_handle);
-    	if (err != ESP_OK) return err;
-    }
+    /* Lets do this in a stupid way for now. Read out each variable separately... */
+    err = nvs_get_u8(my_handle, "task_frequency", &priv_conf.conf.task_frequency);
+    if (err != ESP_OK && err != ESP_ERR_NVS_NOT_FOUND) return err;
+    err = nvs_get_u8(my_handle, "color_scheme", &priv_conf.conf.selected_color_scheme);
+    if (err != ESP_OK && err != ESP_ERR_NVS_NOT_FOUND) return err;
+    err = nvs_get_u8(my_handle, "brightness", &priv_conf.conf.brightness);
+    if (err != ESP_OK && err != ESP_ERR_NVS_NOT_FOUND) return err;
+    err = nvs_get_u8(my_handle, "buzzer", &priv_conf.conf.buzzer);
+    if (err != ESP_OK && err != ESP_ERR_NVS_NOT_FOUND) return err;
 
     // Close
     nvs_close(my_handle);
@@ -222,16 +213,15 @@ Private esp_err_t storeConfig(void)
     	return err;
     }
 
-    err = nvs_set_blob(my_handle, "myConf", priv_conf.data, CONFIG_SIZE);
-
-    if(err != ESP_OK)
-    {
-    	printf("Failed to store configuration\n");
-    }
-
-	// Commit
-	err = nvs_commit(my_handle);
-	if (err != ESP_OK) return err;
+    /* Lets do this in a stupid way for now. Write out each variable separately... */
+    err = nvs_set_u8(my_handle, "task_frequency", priv_conf.conf.task_frequency);
+    if (err != ESP_OK && err != ESP_ERR_NVS_NOT_FOUND) return err;
+    err = nvs_set_u8(my_handle, "color_scheme", priv_conf.conf.selected_color_scheme);
+    if (err != ESP_OK && err != ESP_ERR_NVS_NOT_FOUND) return err;
+    err = nvs_set_u8(my_handle, "brightness", priv_conf.conf.brightness);
+    if (err != ESP_OK && err != ESP_ERR_NVS_NOT_FOUND) return err;
+    err = nvs_set_u8(my_handle, "buzzer", priv_conf.conf.buzzer);
+    if (err != ESP_OK && err != ESP_ERR_NVS_NOT_FOUND) return err;
 
     // Close
     nvs_close(my_handle);
