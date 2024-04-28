@@ -34,6 +34,14 @@ idf_component_register(
     APPLICATION/Fonts/ClockFont.c
     APPLICATION/Fonts/Fonts.c
     APPLICATION/Fonts/SmallFont.c
+    APPLICATION/Bitmaps/beer1.c
+    APPLICATION/Bitmaps/beer2.c
+    APPLICATION/Bitmaps/beer3.c
+    APPLICATION/Bitmaps/beer4.c
+    APPLICATION/Bitmaps/beer5.c
+    APPLICATION/Bitmaps/beer6.c
+    APPLICATION/Bitmaps/beer7.c
+    APPLICATION/Bitmaps/beer8.c
     # list the source files of this component
     
     INCLUDE_DIRS 

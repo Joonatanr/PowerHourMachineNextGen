@@ -180,6 +180,7 @@ Private void handleMessageBoxResponse(MsgBox_Response resp);
 
 /* Beer shot variables */
 #define NUMBER_OF_BEERSHOT_IMAGES 8U
+#if 0
 Private const tImage * priv_beershot_images[NUMBER_OF_BEERSHOT_IMAGES] =
 {
      &BeerShot_1,
@@ -191,6 +192,19 @@ Private const tImage * priv_beershot_images[NUMBER_OF_BEERSHOT_IMAGES] =
      &BeerShot_7,
      &BeerShot_8,
 };
+#else
+Private const tImage * priv_beershot_images[NUMBER_OF_BEERSHOT_IMAGES] =
+{
+     &beer1,
+     &beer2,
+     &beer3,
+     &beer4,
+     &beer5,
+     &beer6,
+     &beer7,
+     &beer8,
+};
+#endif
 
 Private U8 priv_beershot_counter = 0u;
 Private beershotState priv_beer_state;
