@@ -25,6 +25,10 @@ typedef struct __Bargraph__
     char * text;
     bargraph_func value_changed;
     Configuration_Item config_item;
+
+    U16 x_loc;
+    U16 y_loc;
+    U16 width;
 } Bargraph_T;
 
 extern Bargraph_T BRIGHTNESS_BARGRAPH;

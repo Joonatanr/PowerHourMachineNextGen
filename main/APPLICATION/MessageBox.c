@@ -13,12 +13,12 @@
 #include "LcdWriter.h"
 
 #define MSGBOX_FONT FONT_MEDIUM_FONT
-//#define MSGBOX_FONT FONT_SMALL_FONT
 
-#define MSGBOX_MIN_HEIGHT   60u
-#define MSGBOX_MIN_WIDTH    100u
+
+#define MSGBOX_MIN_HEIGHT   90u
+#define MSGBOX_MIN_WIDTH    140u
 #define MSGBOX_MARGIN       10u
-#define BUTTON_AREA_HEIGHT  18u
+#define BUTTON_AREA_HEIGHT  24u
 
 #define MSGBOX_BORDER_WIDTH 3u
 

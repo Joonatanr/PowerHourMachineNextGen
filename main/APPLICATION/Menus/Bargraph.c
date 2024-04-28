@@ -15,16 +15,15 @@
 
 //#include <LOGIC/SnakeGame/SnakeMain.h>
 
-#define BARGRAPH_BEGIN_X    31u
-#define BARGRAPH_WIDTH     100u
-#define BARGRAPH_HEIGHT      8u
-#define BARGRAPH_OFFSET_Y   80u
+//#define BARGRAPH_BEGIN_X    31u
+//#define BARGRAPH_WIDTH     100u
+#define BARGRAPH_HEIGHT     12u
 
-#define UP_ARROW_OFFSET_Y   30u
-#define DOWN_ARROW_OFFSET_Y 60u
-
-#define NUMBER_OFFSET_Y     40u
-
+#define TITLE_OFFSET_Y		10u
+#define UP_ARROW_OFFSET_Y   40u
+#define NUMBER_OFFSET_Y     70u
+#define DOWN_ARROW_OFFSET_Y 100u
+#define BARGRAPH_OFFSET_Y   120u
 
 
 
@@ -41,6 +40,10 @@ Public Bargraph_T BRIGHTNESS_BARGRAPH =
      .text = "Brightness",
      .value_changed = backlight_set_level,
      .config_item = CONFIG_ITEM_BRIGHTNESS,
+
+	 .x_loc = DISPLAY_CENTER - 80u,
+	 .y_loc = 10u,
+	 .width = 160,
 };
 
 Public Bargraph_T TASK_FREQUENCY_BARGRAPH =
@@ -53,6 +56,10 @@ Public Bargraph_T TASK_FREQUENCY_BARGRAPH =
      .text = "Task Frequency (minutes)",
      .value_changed = powerHour_setTaskFrequency,
      .config_item = CONFIG_ITEM_TASK_FREQ,
+
+	 .x_loc = DISPLAY_CENTER - 80u,
+	 .y_loc = 10u,
+	 .width = 160,
 };
 
 /*******************/
@@ -61,31 +68,34 @@ Private Bargraph_T * priv_active_bar;
 Private char priv_buf[10];
 
 
-Private const U16 priv_up_arrow_bmp[5][9] =
+Private const U16 priv_up_arrow_bmp[6][11] =
 {
-     { 0x0000u, 0x0000u, 0x0000u, 0x0000u, 0xffffu, 0x0000u, 0x0000u, 0x0000u, 0x0000u },
-     { 0x0000u, 0x0000u, 0x0000u, 0xffffu, 0xffffu, 0xffffu, 0x0000u, 0x0000u, 0x0000u },
-     { 0x0000u, 0x0000u, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0x0000u, 0x0000u },
-     { 0x0000u, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0x0000u },
-     { 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu },
+     { 0x000u,  0x0000u, 0x0000u, 0x0000u, 0x0000u, 0xffffu, 0x0000u, 0x0000u, 0x0000u, 0x0000u, 0x0000u },
+     { 0x000u,  0x0000u, 0x0000u, 0x0000u, 0xffffu, 0xffffu, 0xffffu, 0x0000u, 0x0000u, 0x0000u, 0x0000u },
+     { 0x000u,  0x0000u, 0x0000u, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0x0000u, 0x0000u, 0x0000u },
+     { 0x000u,  0x0000u, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0x0000u, 0x0000u },
+     { 0x000u,  0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0x0000u },
+	 { 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu },
 };
 
 
-Private const U16 priv_down_arrow_bmp[5][9] =
+Private const U16 priv_down_arrow_bmp[6][11] =
 {
-     { 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu },
-     { 0x0000u, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0x0000u },
-     { 0x0000u, 0x0000u, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0x0000u, 0x0000u },
-     { 0x0000u, 0x0000u, 0x0000u, 0xffffu, 0xffffu, 0xffffu, 0x0000u, 0x0000u, 0x0000u },
-     { 0x0000u, 0x0000u, 0x0000u, 0x0000u, 0xffffu, 0x0000u, 0x0000u, 0x0000u, 0x0000u },
+	{ 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu },
+	{ 0x000u,  0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0x0000u },
+	{ 0x000u,  0x0000u, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0x0000u, 0x0000u },
+	{ 0x000u,  0x0000u, 0x0000u, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0xffffu, 0x0000u, 0x0000u, 0x0000u },
+	{ 0x000u,  0x0000u, 0x0000u, 0x0000u, 0xffffu, 0xffffu, 0xffffu, 0x0000u, 0x0000u, 0x0000u, 0x0000u },
+    { 0x0000u, 0x0000u, 0x0000u, 0x0000u, 0xffffu, 0x0000u, 0x0000u, 0x0000u, 0x0000u },
+	{ 0x000u,  0x0000u, 0x0000u, 0x0000u, 0x0000u, 0xffffu, 0x0000u, 0x0000u, 0x0000u, 0x0000u, 0x0000u },
 };
 
 
 
 /***************************** Private function forward declarations  ******************************/
 
-Private void drawBarGraph(void);
-Private void drawBackGround(void);
+Private void drawBarGraph(Bargraph_T * bargraph_ptr);
+Private void drawBackGround(Bargraph_T * bargraph_ptr);
 
 Private void handleButtonUp(void);
 Private void handleButtonDown(void);
@@ -114,48 +124,47 @@ Public void enterBarGraph(Bargraph_T * bar)
         bar->value = configuration_getItem(bar->config_item);
     }
 
-    drawBackGround();
-    drawBarGraph();
+    drawBackGround(priv_active_bar);
+    drawBarGraph(priv_active_bar);
 }
 
 
 /***************************** Private function definitions  ******************************/
 
 /* Draws whole scrollbar */
-Private void drawBarGraph(void)
+Private void drawBarGraph(Bargraph_T * bargraph_ptr)
 {
     U16 percentage;
-    U8 range = priv_active_bar->max_value - priv_active_bar->min_value;
+    U8 range = bargraph_ptr->max_value - bargraph_ptr->min_value;
 
-    percentage = ((priv_active_bar->value - priv_active_bar->min_value) * 100u) / range;
+    percentage = ((bargraph_ptr->value - bargraph_ptr->min_value) * bargraph_ptr->width) / range;
 
     //Draw the line
     /* We clear it first. */
-    //display_fillRectangle(BARGRAPH_BEGIN_X, BARGRAPH_OFFSET_Y , BARGRAPH_HEIGHT, BARGRAPH_WIDTH, PATTERN_WHITE);
-    display_fillRectangle(BARGRAPH_BEGIN_X, BARGRAPH_OFFSET_Y, BARGRAPH_WIDTH, BARGRAPH_HEIGHT , COLOR_RED);
+    display_fillRectangle(bargraph_ptr->x_loc, BARGRAPH_OFFSET_Y, bargraph_ptr->width, BARGRAPH_HEIGHT , disp_text_color);
 
     /* Then draw the actual line. */
-    display_fillRectangle(BARGRAPH_BEGIN_X, BARGRAPH_OFFSET_Y , percentage, BARGRAPH_HEIGHT , disp_highlight_color);
+    display_fillRectangle(bargraph_ptr->x_loc, BARGRAPH_OFFSET_Y , percentage, BARGRAPH_HEIGHT , disp_highlight_color);
 
     //Draw the number.
-    long2string(priv_active_bar->value, priv_buf);
-    display_drawStringCenter(priv_buf, DISPLAY_CENTER, NUMBER_OFFSET_Y, FONT_MEDIUM_FONT, FALSE);
+    long2string(bargraph_ptr->value, priv_buf);
+    display_drawStringCenter(priv_buf, DISPLAY_CENTER, NUMBER_OFFSET_Y, FONT_LARGE_FONT, FALSE);
 }
 
 
 /* Draws the arrows on the scrollbar sides. */
-Private void drawBackGround(void)
+Private void drawBackGround(Bargraph_T * bargraph_ptr)
 {
     display_clear();
 
     //Draw title
-    display_drawStringCenter(priv_active_bar->text, DISPLAY_CENTER, 10u, FONT_SMALL_FONT , FALSE);
+    display_drawStringCenter(bargraph_ptr->text, DISPLAY_CENTER, TITLE_OFFSET_Y + bargraph_ptr->y_loc, FONT_MEDIUM_FONT , FALSE);
 
     //Draw up arrow.
-    display_drawBitmapCenter(&priv_up_arrow_bmp[0][0], DISPLAY_CENTER, UP_ARROW_OFFSET_Y, 9u, 5u);
+    display_drawBitmapCenter(&priv_up_arrow_bmp[0][0], DISPLAY_CENTER, bargraph_ptr->y_loc + UP_ARROW_OFFSET_Y, 11u, 6u);
 
     //Draw down arrow.
-    display_drawBitmapCenter(&priv_down_arrow_bmp[0][0], DISPLAY_CENTER, DOWN_ARROW_OFFSET_Y, 9u, 5u);
+    display_drawBitmapCenter(&priv_down_arrow_bmp[0][0], DISPLAY_CENTER, bargraph_ptr->y_loc + DOWN_ARROW_OFFSET_Y, 11u, 6u);
 }
 
 
@@ -189,7 +198,9 @@ Private void updateBargraph(void)
        priv_active_bar->value_changed(priv_active_bar->value);
     }
 
-    drawBarGraph();
+    drawBackGround(priv_active_bar);
+
+    drawBarGraph(priv_active_bar);
 }
 
 Private void handleButtonAck(void)
