@@ -15,6 +15,7 @@
 extern void powerHour_init(void);
 extern void powerHour_start(void);
 extern void powerHour_cyclic1000msec(void);
+extern void powerHour_cyclic100msec(void);
 extern void powerHour_stop(void);
 
 extern void powerHour_setTaskFrequency(U16 freq);

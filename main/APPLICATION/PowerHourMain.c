@@ -389,6 +389,23 @@ Public void powerHour_start(void)
 }
 
 
+Public void powerHour_cyclic100msec(void)
+{
+	static U8 cycle_counter = 0;
+	cycle_counter++;
+
+	if (cycle_counter >= 10 )
+	{
+		cycle_counter = 0;
+		powerHour_cyclic1000msec();
+	}
+	else if(priv_is_pot_override_active)
+	{
+		/* We need to update this faster than the rest of the display... */
+		drawPotentiometerData();
+	}
+}
+
 Public void powerHour_cyclic1000msec(void)
 {
     U8 ix;

@@ -36,7 +36,7 @@ Private void dedicationExitListener(void);
 /* Ok : Idea is this that this array contains the tasks, of which only one can be active at a time. */
 Private const Scheduler_LogicTask priv_application_modules[NUMBER_OF_APPLICATIONS] =
 {
-     { .period = 20u, .init_fptr = powerHour_init, .  start_fptr = powerHour_start,   .cyclic_fptr = powerHour_cyclic1000msec,       .stop_fptr = powerHour_stop },
+     { .period = 2u, .init_fptr = powerHour_init, .  start_fptr = powerHour_start,   .cyclic_fptr = powerHour_cyclic100msec,       .stop_fptr = powerHour_stop },
      //{ .period = 50u,   .init_fptr = snake_init,        .start_fptr = snake_start,        .cyclic_fptr = snake_cyclic50ms,            .stop_fptr = snake_stop        },
      { .period = 1u,  .init_fptr = NULL,              .start_fptr = dedication_start,   .cyclic_fptr = dedication_cyclic50ms,      .stop_fptr = NULL          },
 };
