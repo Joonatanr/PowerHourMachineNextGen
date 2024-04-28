@@ -25,8 +25,8 @@
 #define SMALL_SHOT_Y 50u
 #define SMALL_SHOT_INTERVAL 20u
 
-#define SPECIALTASK_FONT FONT_ARIAL_14_BOLD
-#define SPECIALTASK_SMALL_FONT FONT_ARIAL_12
+#define SPECIALTASK_FONT FONT_MEDIUM_FONT
+#define SPECIALTASK_SMALL_FONT FONT_SMALL_FONT
 
 
 /*****************************************************************************************************

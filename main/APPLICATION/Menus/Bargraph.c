@@ -149,7 +149,7 @@ Private void drawBackGround(void)
     display_clear();
 
     //Draw title
-    display_drawStringCenter(priv_active_bar->text, DISPLAY_CENTER, 10u, FONT_SMALL_FONT_12 , FALSE);
+    display_drawStringCenter(priv_active_bar->text, DISPLAY_CENTER, 10u, FONT_SMALL_FONT , FALSE);
 
     //Draw up arrow.
     display_drawBitmapCenter(&priv_up_arrow_bmp[0][0], DISPLAY_CENTER, UP_ARROW_OFFSET_Y, 9u, 5u);

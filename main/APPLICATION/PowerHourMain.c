@@ -29,11 +29,12 @@
 //#define DISABLE_BUZZER_FOR_TESTING
 //#define PSEUDORANDOM_NUMBER_TEST
 
-#define CLOCK_X_OFFSET 3u
-#define CLOCK_Y_OFFSET 15u
-#define CLOCK_LETTER_SPACING 23u
+#define CLOCK_X_OFFSET 16u
+#define CLOCK_Y_OFFSET 25u
+#define CLOCK_LETTER_SPACING 36u
+#define CLOCK_COLON_SPACING 20u
 
-#define BEERSHOT_IMAGE_X_OFFSET 18u
+#define BEERSHOT_IMAGE_X_OFFSET 22u
 #define BEERSHOT_IMAGE_Y_OFFSET 15u
 
 #define TEXT_X_OFFSET 3u
@@ -869,7 +870,7 @@ Private void drawClock(void)
     LcdWriter_drawCharColored('0' + (priv_curr_minute % 10u), x_offset, CLOCK_Y_OFFSET, FONT_TNR_HUGE_NUMBERS, disp_text_color, disp_background_color);
     x_offset += CLOCK_LETTER_SPACING - 1u;
     LcdWriter_drawCharColored(':' , x_offset, CLOCK_Y_OFFSET, FONT_TNR_HUGE_NUMBERS, disp_text_color, disp_background_color);
-    x_offset += 14u;
+    x_offset += CLOCK_COLON_SPACING;
     LcdWriter_drawCharColored('0' + (priv_curr_second / 10u), x_offset, CLOCK_Y_OFFSET, FONT_TNR_HUGE_NUMBERS, disp_text_color, disp_background_color);
     x_offset += CLOCK_LETTER_SPACING;
     LcdWriter_drawCharColored('0' + (priv_curr_second % 10u), x_offset, CLOCK_Y_OFFSET, FONT_TNR_HUGE_NUMBERS, disp_text_color, disp_background_color);
@@ -884,7 +885,7 @@ Private void drawTextOnLine(const char * text, int line)
         /* Clear any previous text. */
         display_fillRectangle(TEXT_AREA_X_BEGIN, TEXT_AREA_Y_BEGIN + (line * TEXT_LINE_DISTANCE), TEXT_AREA_X_END - TEXT_AREA_X_BEGIN,TEXT_LINE_DISTANCE, disp_background_color);
 
-        LcdWriter_drawColoredString(text, TEXT_X_OFFSET, TEXT_AREA_Y_BEGIN + TEXT_Y_OFFSET + (line * TEXT_LINE_DISTANCE), FONT_SMALL_FONT_12, disp_ph_prompt_text_color, disp_background_color);
+        LcdWriter_drawColoredString(text, TEXT_X_OFFSET, TEXT_AREA_Y_BEGIN + TEXT_Y_OFFSET + (line * TEXT_LINE_DISTANCE), FONT_SMALL_FONT, disp_ph_prompt_text_color, disp_background_color);
     }
 }
 

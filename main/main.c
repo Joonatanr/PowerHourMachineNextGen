@@ -240,10 +240,10 @@ Private void showStartScreen(void)
     //display_flushBuffer(0u, 0u, DISPLAY_WIDTH, DISPLAY_HEIGHT);
 
     vTaskDelay(3000 / portTICK_PERIOD_MS);
-
-    LcdWriter_drawStringCenter("Power Hour", (DISPLAY_WIDTH / 2u) + 4u, 80u, FONT_ARIAL_16_BOLD, disp_text_color, disp_background_color);
-    LcdWriter_drawStringCenter(priv_version_string, (DISPLAY_WIDTH / 2u) + 4u, 100u, FONT_ARIAL_16_BOLD, disp_text_color, disp_background_color);
-    LcdWriter_drawStringCenter("GA Edition", (DISPLAY_WIDTH / 2u) + 4u, 120u, FONT_ARIAL_14_BOLD, disp_text_color, disp_background_color);
+    //LcdWriter_drawChar('0', 10, 10, FONT_TNR_HUGE_NUMBERS);
+    LcdWriter_drawStringCenter("Power Hour", (DISPLAY_WIDTH / 2u) + 4u, 80u, FONT_LARGE_FONT, disp_text_color, disp_background_color);
+    LcdWriter_drawStringCenter(priv_version_string, (DISPLAY_WIDTH / 2u) + 4u, 110u, FONT_MEDIUM_FONT, disp_text_color, disp_background_color);
+    LcdWriter_drawStringCenter("GA Edition", (DISPLAY_WIDTH / 2u) + 4u, 135u, FONT_LARGE_FONT, disp_text_color, disp_background_color);
 
     display_flushBuffer(0u, 0u, DISPLAY_WIDTH, DISPLAY_HEIGHT);
     vTaskDelay(6000 / portTICK_PERIOD_MS);

@@ -34,23 +34,27 @@
 
 typedef enum
 {
-    FONT_SMALL_FONT_12,
     FONT_ARIAL_12,
     FONT_ARIAL_14_BOLD,
     FONT_ARIAL_16_BOLD,
+	FONT_ARIAL_24_BOLD,
+
     FONT_TNR_HUGE_NUMBERS,
 
     NUMBER_OF_FONTS
 } FontType_t;
 
 /* Legacy conversion */
-#define FONT_MEDIUM_FONT FONT_ARIAL_12
-#define FONT_LARGE_FONT FONT_ARIAL_16_BOLD
+#define FONT_TINY_FONT		FONT_ARIAL_12
+#define FONT_SMALL_FONT		FONT_ARIAL_14_BOLD
+#define FONT_MEDIUM_FONT 	FONT_ARIAL_16_BOLD
+#define FONT_LARGE_FONT 	FONT_ARIAL_24_BOLD
+#define FONT_HUGE_FONT		FONT_TNR_HUGE_NUMBERS
 
 extern const tFont Arial14Bold;
+extern const tFont FontArial24Bold;
 extern const tFont FontLargeText;
 extern const tFont ClockFont;
-extern const tFont FontSmall12;
 extern const tFont Arial12;
 
 

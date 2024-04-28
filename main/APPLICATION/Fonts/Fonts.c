@@ -2,11 +2,11 @@
 
 Private const tFont * priv_fonts[NUMBER_OF_FONTS] =
 {
-     &FontSmall12,   /* FONT_SMALL_FONT_12          */
-     &Arial12,       /* FONT_ARIAL_12               */
-     &Arial14Bold,   /* FONT_ARIAL_14_BOLD          */
-     &FontLargeText, /* FONT_ARIAL_16_BOLD          */
-     &ClockFont      /* FONT_TNR_HUGE_NUMBERS       */
+     &Arial12,       	/* FONT_ARIAL_12               */
+     &Arial14Bold,   	/* FONT_ARIAL_14_BOLD          */
+     &FontLargeText, 	/* FONT_ARIAL_16_BOLD          */
+	 &FontArial24Bold,  /* FONT_ARIAL_24_BOLD          */
+     &ClockFont      	/* FONT_TNR_HUGE_NUMBERS       */
 };
 
 

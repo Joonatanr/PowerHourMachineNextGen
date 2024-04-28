@@ -12,7 +12,7 @@
 
 /* Distance between the y coordinates of two consecutive lines in a string. */
 Private U16 priv_line_distance = 18u;
-Private U16 priv_char_buf[1320u * 2u];
+Private U16 priv_char_buf[4000u];
 
 
 
@@ -20,10 +20,26 @@ Private U16 priv_char_buf[1320u * 2u];
 Public U8 LcdWriter_drawChar(char c, int x, int y, FontType_t font)
 {
     U8 res = 0u;
+    U16 index;
 
     if(c >= 0x20u)
     {
-        U16 index = c - 0x20;
+        if (font == FONT_TNR_HUGE_NUMBERS)
+        {
+           /* Special case... */
+           if (c >= '0' && c <= ':')
+           {
+               index = c- '0';
+           }
+           else
+           {
+               return 0;
+           }
+        }
+        else
+        {
+            index = c - 0x20;
+        }
 
         if (font < NUMBER_OF_FONTS)
         {

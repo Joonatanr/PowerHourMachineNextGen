@@ -33,7 +33,7 @@ idf_component_register(
     APPLICATION/Fonts/Arial16Bold.c
     APPLICATION/Fonts/ClockFont.c
     APPLICATION/Fonts/Fonts.c
-    APPLICATION/Fonts/SmallFont.c
+    APPLICATION/Fonts/Arial24Bold.c
     APPLICATION/Bitmaps/beer1.c
     APPLICATION/Bitmaps/beer2.c
     APPLICATION/Bitmaps/beer3.c
