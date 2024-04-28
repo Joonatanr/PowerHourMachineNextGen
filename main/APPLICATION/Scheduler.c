@@ -215,24 +215,8 @@ Private void dedication_start(void)
 
     display_fill(COLOR_RED);
 
-    display_drawString("This Power Hour Machine",           0u, yCoord,  FONT_ARIAL_12, FALSE);
+    display_drawString("This Power Hour Machine... TODO",           0u, yCoord,  FONT_MEDIUM_FONT, FALSE);
     yCoord += line_height;
-    display_drawString("was built for Diana, the SOC",      0u, yCoord,  FONT_ARIAL_12, FALSE);
-    yCoord += line_height;
-    display_drawString("responsible for GA2024 and",      0u, yCoord,  FONT_ARIAL_12, FALSE);
-    yCoord += line_height;
-    display_drawString("Chairwoman of KT, and also", 0u, yCoord,  FONT_ARIAL_12, FALSE);
-    yCoord += line_height;
-    display_drawString("for her clone duplicate Mirtel.",          0u, yCoord,  FONT_ARIAL_12, FALSE);
-    yCoord += line_height;
-    display_drawString(" ",          0u, yCoord,  FONT_ARIAL_12, FALSE);
-
-    yCoord += line_height;
-    display_drawString("May you have an EPIC GA!",          0u, yCoord,  FONT_ARIAL_12, FALSE);
-    yCoord += line_height;
-    display_drawString("-Urmet,Jorx,Kristel,Joonatan",   0u, yCoord,  FONT_ARIAL_12, FALSE);
-
-
 
     /* Basically we wait for ANY key to be pressed. */
     buttons_subscribeListener(UP_BUTTON,    dedicationExitListener);

@@ -24,6 +24,7 @@ typedef struct
 /* Private const definitions */
 
 #define HYSTERESIS_VALUE 50u
+#define CALLBACK_HYSTERESIS 100u
 #define NUMBER_OF_POT_RANGES 4
 
 /* ADC value is 14 bit, so between 0 and 16384 , 4096 per quadrant*/
@@ -56,9 +57,15 @@ Private int curADCResult[NUMBER_OF_DEFINED_POTENTIOMETERS] = { 0u };
 Private int currentRange[NUMBER_OF_DEFINED_POTENTIOMETERS] = { 0 };
 Private adc_oneshot_unit_handle_t adc2_handle;
 
+Private pot_value_changed_func priv_callback_func = NULL;
+Private int priv_pot_callback_values[NUMBER_OF_DEFINED_POTENTIOMETERS];
+
 /* Private function forward declarations. */
 Private bool adc_calibration_init(adc_unit_t unit, adc_channel_t channel, adc_atten_t atten, adc_cali_handle_t *out_handle);
 Private void adc_calibration_deinit(adc_cali_handle_t handle);
+
+Private void storeCallbackPotValues(void);
+Private void checkForCallbackRequest(void);
 
 /* Public function definitions. */
 Public void pot_init(void)
@@ -123,6 +130,8 @@ Public void pot_cyclic_100ms(void)
             currentRange[pot_ix] = measured_range;
         }
     }
+
+    checkForCallbackRequest();
 }
 
 
@@ -153,6 +162,51 @@ Public int pot_getCurrentMeasurement(potentiometer_T pot)
     }
 }
 
+
+Public void pot_register_callback(pot_value_changed_func func)
+{
+	storeCallbackPotValues();
+	priv_callback_func = func;
+}
+
+Public void pot_unregister_callback(void)
+{
+	priv_callback_func = NULL;
+}
+
+
+/*---------------------------------------------------------------
+        Private functions
+---------------------------------------------------------------*/
+
+Private void storeCallbackPotValues(void)
+{
+	U8 ix;
+
+	for(ix = 0u; ix < NUMBER_OF_POT_RANGES; ix++)
+	{
+		priv_pot_callback_values[ix] = curADCResult[ix];
+	}
+}
+
+Private void checkForCallbackRequest(void)
+{
+	U8 ix;
+
+	for (ix = 0u; ix < NUMBER_OF_POT_RANGES; ix++)
+	{
+		if (((priv_pot_callback_values[ix] + CALLBACK_HYSTERESIS) < curADCResult[ix])
+	      || (priv_pot_callback_values[ix] - CALLBACK_HYSTERESIS) > curADCResult[ix])
+		{
+			if (priv_callback_func != NULL)
+			{
+				storeCallbackPotValues();
+				priv_callback_func();
+				break;
+			}
+		}
+	}
+}
 
 /*---------------------------------------------------------------
         ADC Calibration

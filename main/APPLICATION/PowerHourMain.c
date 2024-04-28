@@ -61,8 +61,10 @@
 #define TEXT_AREA_Y_BEGIN (CLOCK_AREA_Y_END + BORDER_WIDTH)
 #define TEXT_AREA_Y_END DISPLAY_HEIGHT - 1u
 
+#define TEXT_AREA_WIDTH TEXT_AREA_X_END - TEXT_AREA_X_BEGIN
+#define TEXT_AREA_HEIGHT TEXT_AREA_Y_END - TEXT_AREA_Y_BEGIN
 
-
+#define POT_OVERRIDE_PERIOD 8u /* 8 seconds of displaying the potentiometer data. */
 
 /*****************************************************************************************************
  *
@@ -147,7 +149,9 @@ Private void drawBeerShot(beerShotAction action);
 Private void drawBeerShotLevel(U8 level);
 Private void drawBeerShotBackground(void);
 Private void redrawBackground(void);
-Private void drawTextOnLine(const char * text, int line);
+Private void setTextOnLine(const char * text, int line);
+Private void clearTextOnLine(int line);
+Private void drawTextArea(void);
 
 Private U8 getScheduledSpecialTask(const ControllerEvent ** event_ptr);
 Private U8 selectRandomTaskIndex(void);
@@ -159,7 +163,7 @@ Private Boolean genericIntroFunction(const IntroSequence * intro_ptr, U8 sec);
 
 Private void doFinalAction(void);
 Private void setupStartOfMinute(void);
-Private void drawEventText(const ControllerEvent* event);
+Private void setEventText(const ControllerEvent* event);
 Private void handlePreemptiveBitmapLoad(void);
 
 /* Button handlers. */
@@ -170,6 +174,9 @@ Private void HandleRightButton(void);
 Private void HandleLeftButton(void);
 
 Private void handleMessageBoxResponse(MsgBox_Response resp);
+
+Private void handlePotValuesChanged(void);
+Private void drawPotentiometerData(void);
 
 /*****************************************************************************************************
  *
@@ -287,6 +294,9 @@ Private Boolean priv_is_bitmap_loaded = FALSE;
 
 Private uint16_t * priv_sd_card_image_buffer = NULL;
 
+Private bool priv_is_pot_override_active = false;
+Private int priv_pot_override_counter = 0;
+
 /*****************************************************************************************************
  *
  * Public function definitions
@@ -328,6 +338,7 @@ Public void powerHour_start(void)
     priv_task_frequency = configuration_getItem(CONFIG_ITEM_TASK_FREQ);
 
     regenerate_random_number_seed();
+    pot_register_callback(handlePotValuesChanged);
 
 #ifdef PSEUDORANDOM_NUMBER_TEST
     int number = generate_random_number(30u);
@@ -391,6 +402,12 @@ Public void powerHour_cyclic1000msec(void)
     }
 #endif
 
+    if (priv_state != CONTROLLER_COUNTING)
+    {
+    	priv_is_pot_override_active = false;
+    	priv_pot_override_counter = 0;
+    }
+
     //Game ends and we enter final state.
     if (priv_curr_minute == 60u)
     {
@@ -427,9 +444,11 @@ Public void powerHour_cyclic1000msec(void)
                 }
             }
 
+
+
             if (event_ptr != NULL)
             {
-                drawEventText(event_ptr);
+                setEventText(event_ptr);
 
                 action = event_ptr->shot_action;
             }
@@ -444,6 +463,15 @@ Public void powerHour_cyclic1000msec(void)
 
             drawBeerShot(action);
             drawClock();
+
+            if (priv_is_pot_override_active)
+            {
+            	drawPotentiometerData();
+            }
+            else
+            {
+            	drawTextArea();
+            }
 
             /* Here is where we start to pre-emptively load the bitmap for the next minute if necessary. Best not to do it too early when the display buffer might still be used. */
             if (priv_curr_second == 30u)
@@ -485,7 +513,10 @@ Public void powerHour_cyclic1000msec(void)
 /* Should return all variables to their initial states. */
 Public void powerHour_stop(void)
 {
-    priv_state = CONTROLLER_INIT;
+    pot_unregister_callback();
+    buttons_unsubscribeAll();
+
+	priv_state = CONTROLLER_INIT;
     priv_curr_minute = 0u;
     priv_curr_second = 0u;
     SpecialTasks_init();
@@ -752,16 +783,16 @@ Private void incrementTimer(void)
 }
 
 
-Private void drawEventText(const ControllerEvent* event)
+Private void setEventText(const ControllerEvent* event)
 {
     if (event->upperText != NULL)
     {
-        drawTextOnLine(event->upperText, 0u);
+        setTextOnLine(event->upperText, 0u);
     }
 
     if (event->lowerText != NULL)
     {
-        drawTextOnLine(event->lowerText, 1u);
+        setTextOnLine(event->lowerText, 1u);
     }
 }
 
@@ -858,6 +889,7 @@ Private void redrawBackground(void)
     drawBorders();
 #endif
     drawBeerShotBackground();
+    drawTextArea();
 }
 
 
@@ -876,10 +908,13 @@ Private void drawClock(void)
     LcdWriter_drawCharColored('0' + (priv_curr_second % 10u), x_offset, CLOCK_Y_OFFSET, FONT_TNR_HUGE_NUMBERS, disp_text_color, disp_background_color);
 }
 
+Private char priv_text_lines[2][256];
 
-Private void drawTextOnLine(const char * text, int line)
+
+Private void setTextOnLine(const char * text, int line)
 {
-    /* We should have enough space for two lines of text...*/
+#if 0
+	/* We should have enough space for two lines of text...*/
     if (line <= 1u)
     {
         /* Clear any previous text. */
@@ -887,6 +922,27 @@ Private void drawTextOnLine(const char * text, int line)
 
         LcdWriter_drawColoredString(text, TEXT_X_OFFSET, TEXT_AREA_Y_BEGIN + TEXT_Y_OFFSET + (line * TEXT_LINE_DISTANCE), FONT_SMALL_FONT, disp_ph_prompt_text_color, disp_background_color);
     }
+#endif
+    strcpy(priv_text_lines[line], text);
+}
+
+Private void clearTextOnLine(int line)
+{
+	priv_text_lines[0][0] = 0;
+	priv_text_lines[1][0] = 0;
+}
+
+
+Private void drawTextArea(void)
+{
+	 /* Clear any previous text. */
+	display_fillRectangle(TEXT_AREA_X_BEGIN, TEXT_AREA_Y_BEGIN , TEXT_AREA_X_END - TEXT_AREA_X_BEGIN, TEXT_AREA_Y_END - TEXT_AREA_Y_BEGIN, disp_background_color);
+
+	/* Draw line 0 */
+	LcdWriter_drawColoredString(priv_text_lines[0], TEXT_X_OFFSET, TEXT_AREA_Y_BEGIN + TEXT_Y_OFFSET , FONT_SMALL_FONT, disp_ph_prompt_text_color, disp_background_color);
+
+	/* Draw line 1 */
+	LcdWriter_drawColoredString(priv_text_lines[1], TEXT_X_OFFSET, TEXT_AREA_Y_BEGIN + TEXT_Y_OFFSET + (1u * TEXT_LINE_DISTANCE), FONT_SMALL_FONT, disp_ph_prompt_text_color, disp_background_color);
 }
 
 
@@ -968,4 +1024,28 @@ Private void handleMessageBoxResponse(MsgBox_Response resp)
     {
         /* Should not really happen. */
     }
+}
+
+
+/* Potentiometers handler.. */
+Private void handlePotValuesChanged(void)
+{
+	if (priv_state == CONTROLLER_COUNTING)
+	{
+		priv_is_pot_override_active = true;
+		priv_pot_override_counter = 10;
+	}
+}
+
+Private void drawPotentiometerData(void)
+{
+	/* Idea is to replace the whole area with a potentiometer box for a while... */
+	priv_pot_override_counter--;
+
+	display_fillRectangle(TEXT_AREA_X_BEGIN, TEXT_AREA_Y_BEGIN, TEXT_AREA_WIDTH , TEXT_AREA_HEIGHT, COLOR_ORANGE);
+
+	if (priv_pot_override_counter == 0)
+	{
+		priv_is_pot_override_active = false;
+	}
 }

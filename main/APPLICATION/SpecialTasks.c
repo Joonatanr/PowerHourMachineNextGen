@@ -25,8 +25,12 @@
 #define SMALL_SHOT_Y 50u
 #define SMALL_SHOT_INTERVAL 20u
 
-#define SPECIALTASK_FONT FONT_MEDIUM_FONT
-#define SPECIALTASK_SMALL_FONT FONT_SMALL_FONT
+#define SPECIALTASK_FONT FONT_LARGE_FONT
+#define SPECIALTASK_SMALL_FONT FONT_MEDIUM_FONT
+
+#define UPPER_TEXT_Y_OFFSET 	 60u
+#define MIDDLE_TEXT_Y_OFFSET 	100u
+#define LOWER_TEXT_Y_OFFSET 	140u
 
 
 /*****************************************************************************************************
@@ -920,11 +924,11 @@ Private Boolean SpecialTaskWithRandomText(U8 sec, SpecialTaskType type)
                     ReplaceStringEscapeChars(priv_task_str_ptr->upper_text, priv_str_buf);
                     if (LcdWriter_getStringWidth(priv_str_buf, SPECIALTASK_FONT) <= DISPLAY_WIDTH)
                     {
-                        display_drawStringCenter(priv_str_buf, DISPLAY_CENTER, 30u, SPECIALTASK_FONT, FALSE);
+                        display_drawStringCenter(priv_str_buf, DISPLAY_CENTER, UPPER_TEXT_Y_OFFSET, SPECIALTASK_FONT, FALSE);
                     }
                     else
                     {
-                        display_drawStringCenter(priv_str_buf, DISPLAY_CENTER, 30u, SPECIALTASK_SMALL_FONT, FALSE);
+                        display_drawStringCenter(priv_str_buf, DISPLAY_CENTER, UPPER_TEXT_Y_OFFSET, SPECIALTASK_SMALL_FONT, FALSE);
                     }
                 }
             }
@@ -936,11 +940,11 @@ Private Boolean SpecialTaskWithRandomText(U8 sec, SpecialTaskType type)
                     ReplaceStringEscapeChars(priv_task_str_ptr->middle_text, priv_str_buf);
                     if (LcdWriter_getStringWidth(priv_str_buf, SPECIALTASK_FONT) <= DISPLAY_WIDTH)
                     {
-                        display_drawStringCenter(priv_str_buf, DISPLAY_CENTER, 60u, SPECIALTASK_FONT, FALSE);
+                        display_drawStringCenter(priv_str_buf, DISPLAY_CENTER, MIDDLE_TEXT_Y_OFFSET, SPECIALTASK_FONT, FALSE);
                     }
                     else
                     {
-                        display_drawStringCenter(priv_str_buf, DISPLAY_CENTER, 60u, SPECIALTASK_SMALL_FONT, FALSE);
+                        display_drawStringCenter(priv_str_buf, DISPLAY_CENTER, MIDDLE_TEXT_Y_OFFSET, SPECIALTASK_SMALL_FONT, FALSE);
                     }
                 }
             }
@@ -952,11 +956,11 @@ Private Boolean SpecialTaskWithRandomText(U8 sec, SpecialTaskType type)
                     ReplaceStringEscapeChars(priv_task_str_ptr->lower_text, priv_str_buf);
                     if (LcdWriter_getStringWidth(priv_str_buf, SPECIALTASK_FONT) <= DISPLAY_WIDTH)
                     {
-                        display_drawStringCenter(priv_str_buf, DISPLAY_CENTER, 90u, SPECIALTASK_FONT, FALSE);
+                        display_drawStringCenter(priv_str_buf, DISPLAY_CENTER, LOWER_TEXT_Y_OFFSET, SPECIALTASK_FONT, FALSE);
                     }
                     else
                     {
-                        display_drawStringCenter(priv_str_buf, DISPLAY_CENTER, 90u, SPECIALTASK_SMALL_FONT, FALSE);
+                        display_drawStringCenter(priv_str_buf, DISPLAY_CENTER, LOWER_TEXT_Y_OFFSET, SPECIALTASK_SMALL_FONT, FALSE);
                     }
                 }
             }
@@ -966,9 +970,9 @@ Private Boolean SpecialTaskWithRandomText(U8 sec, SpecialTaskType type)
                 if ((pot_getSelectedRange(POTENTIOMETER_SEXY_LEVEL) == 0u) && (pot_getSelectedRange(POTENTIOMETER_NUDE_LEVEL) == 0u))
                 {
                     display_clear();
-                    display_drawStringCenter("Come on guys!", DISPLAY_CENTER, 4u, SPECIALTASK_FONT, FALSE);
-                    display_drawStringCenter("don't be pussies!", DISPLAY_CENTER, 23u, SPECIALTASK_FONT, FALSE);
-                    display_drawStringCenter("Turn up some sexy!", DISPLAY_CENTER, 43u, SPECIALTASK_FONT, FALSE);
+                    display_drawStringCenter("Come on guys!", DISPLAY_CENTER, UPPER_TEXT_Y_OFFSET, SPECIALTASK_FONT, FALSE);
+                    display_drawStringCenter("don't be pussies!", DISPLAY_CENTER, MIDDLE_TEXT_Y_OFFSET, SPECIALTASK_FONT, FALSE);
+                    display_drawStringCenter("Turn up some sexy!", DISPLAY_CENTER, LOWER_TEXT_Y_OFFSET, SPECIALTASK_FONT, FALSE);
                 }
             }
             break;
