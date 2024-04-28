@@ -67,7 +67,6 @@ Public void buzzer_cyclic100msec(void)
         }
     }
 
-
     if (priv_buzzer_counter > 0)
     {
         priv_buzzer_counter--;
