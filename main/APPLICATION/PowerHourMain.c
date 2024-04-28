@@ -45,8 +45,8 @@
 /* CLOCK area dimensions */
 #define CLOCK_AREA_X_BEGIN  0u
 #define CLOCK_AREA_Y_BEGIN  0u
-#define CLOCK_AREA_X_END    115u
-#define CLOCK_AREA_Y_END    86u
+#define CLOCK_AREA_X_END    200u
+#define CLOCK_AREA_Y_END    160u
 
 /* BEERSHOT area dimensions */
 #define BEERSHOT_AREA_X_BEGIN (CLOCK_AREA_X_END + BORDER_WIDTH)
