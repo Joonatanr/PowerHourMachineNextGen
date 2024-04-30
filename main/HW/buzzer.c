@@ -9,7 +9,7 @@
 #include "buzzer.h"
 #include "driver/gpio.h"
 
-#define BUZZER_PIN 20
+#define BUZZER_PIN 38
 #define BEEP_INTERVAL 5u /* 400msec */
 #define BEEP_LENGTH 3u   /* 200msec */
 
