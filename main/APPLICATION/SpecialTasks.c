@@ -115,6 +115,16 @@ Private const SpecialTaskFunc priv_special_tasks_everybody_array[] =
   &DrinkTwiceTask,
 };
 
+Private const SpecialTaskFunc priv_special_tasks_enginaator_array[] =
+{
+  &SpecialTaskWithRandomText,
+  &SpecialTaskWithRandomText,
+  &SpecialTaskWithRandomText,
+  &SpecialTaskWithRandomText,
+  &SpecialTaskWithRandomText,
+  &SpecialTaskWithRandomText,
+};
+
 
 /* Easy tasks. -> Really softcore.  */
 Private const Task_T priv_TextArrayGirlsLevel1[] =
@@ -224,6 +234,13 @@ Private const Task_T priv_TextArrayAllLevel1[] =
 
 Private U8 priv_TextArrayAllLevel1_counter[NUMBER_OF_ITEMS(priv_TextArrayAllLevel1)];
 
+Private const Task_T priv_TextArrayEngikasLevel1[] =
+{
+	  {  "Vodka round"           , "for Enginaator",       "Core Team"        ,  .nude_level = 0u, .sexy_level = 0u    }, /* 1  */
+
+};
+
+Private U8 priv_TextArrayEngikasLevel1_counter[NUMBER_OF_ITEMS(priv_TextArrayEngikasLevel1)];
 
 /* Medium tasks */
 Private const Task_T priv_TextArrayGirlsLevel2[] =
@@ -344,6 +361,12 @@ Private const Task_T priv_TextArrayAllLevel2[] =
 
 Private U8 priv_TextArrayAllLevel2_counter[NUMBER_OF_ITEMS(priv_TextArrayAllLevel2)];
 
+Private const Task_T priv_TextArrayEngikasLevel2[] =
+{
+	  {  "Vodka round"           , "for Enginaator",       "Core Team"        ,  .nude_level = 0u, .sexy_level = 0u    }, /* 1  */
+};
+
+Private U8 priv_TextArrayEngikasLevel2_counter[NUMBER_OF_ITEMS(priv_TextArrayEngikasLevel2)];
 
 /* Hard tasks.  */
 Private const Task_T priv_TextArrayGirlsLevel3[] =
@@ -446,6 +469,13 @@ Private const Task_T priv_TextArrayAllLevel3[] =
 
 Private U8 priv_TextArrayAllLevel3_counter[NUMBER_OF_ITEMS(priv_TextArrayAllLevel3)];
 
+
+Private const Task_T priv_TextArrayEngikasLevel3[] =
+{
+	  {  "Vodka round"           , "for Enginaator",       "Core Team"        ,  .nude_level = 0u, .sexy_level = 0u    }, /* 1  */
+};
+
+Private U8 priv_TextArrayEngikasLevel3_counter[NUMBER_OF_ITEMS(priv_TextArrayEngikasLevel3)];
 
 /* Hardcore tasks.  */
 Private const Task_T priv_TextArrayGirlsLevel4[] =
@@ -605,6 +635,13 @@ Private const Task_T priv_TextArrayAllLevel4[] =
 
 Private U8 priv_TextArrayAllLevel4_counter[NUMBER_OF_ITEMS(priv_TextArrayAllLevel4)];
 
+Private const Task_T priv_TextArrayEngikasLevel4[] =
+{
+	  {  "Vodka round"           , "for Enginaator",       "Core Team"        ,  .nude_level = 0u, .sexy_level = 0u    }, /* 1  */
+};
+
+Private U8 priv_TextArrayEngikasLevel4_counter[NUMBER_OF_ITEMS(priv_TextArrayEngikasLevel4)];
+
 
 Private const Task_Array_Descriptor priv_task_array_desc[NUMBER_OF_TASK_TYPES][4] =
 {
@@ -627,6 +664,13 @@ Private const Task_Array_Descriptor priv_task_array_desc[NUMBER_OF_TASK_TYPES][4
         {.task_array = priv_TextArrayAllLevel2  , .number_of_array_items = NUMBER_OF_ITEMS(priv_TextArrayAllLevel2), .counter_array = priv_TextArrayAllLevel2_counter},
         {.task_array = priv_TextArrayAllLevel3  , .number_of_array_items = NUMBER_OF_ITEMS(priv_TextArrayAllLevel3), .counter_array = priv_TextArrayAllLevel3_counter},
         {.task_array = priv_TextArrayAllLevel4  , .number_of_array_items = NUMBER_OF_ITEMS(priv_TextArrayAllLevel4), .counter_array = priv_TextArrayAllLevel4_counter},
+     },
+
+     {
+        {.task_array = priv_TextArrayEngikasLevel1  , .number_of_array_items = NUMBER_OF_ITEMS(priv_TextArrayEngikasLevel1), .counter_array = priv_TextArrayEngikasLevel1_counter},
+        {.task_array = priv_TextArrayEngikasLevel2  , .number_of_array_items = NUMBER_OF_ITEMS(priv_TextArrayEngikasLevel2), .counter_array = priv_TextArrayEngikasLevel2_counter},
+        {.task_array = priv_TextArrayEngikasLevel3  , .number_of_array_items = NUMBER_OF_ITEMS(priv_TextArrayEngikasLevel3), .counter_array = priv_TextArrayEngikasLevel3_counter},
+        {.task_array = priv_TextArrayEngikasLevel4  , .number_of_array_items = NUMBER_OF_ITEMS(priv_TextArrayEngikasLevel4), .counter_array = priv_TextArrayEngikasLevel4_counter},
      },
 };
 
@@ -774,6 +818,25 @@ Public Boolean everybodySpecialTask(U8 sec)
     return res;
 }
 
+Public Boolean EnginaatorSpecialTask(U8 sec)
+{
+    Boolean res = FALSE;
+    static U8 test_counter = 0u;
+
+    if (sec == 0u)
+    {
+        priv_selected_task_ptr = priv_special_tasks_enginaator_array[test_counter];
+        test_counter++;
+        if (test_counter >= NUMBER_OF_ITEMS(priv_special_tasks_enginaator_array))
+        {
+            test_counter = 0u;
+        }
+    }
+
+    res = priv_selected_task_ptr(sec, TASK_FOR_ENGINAATOR_TEAM);
+    return res;
+}
+
 
 
 /*****************************************************************************************************
@@ -890,6 +953,9 @@ Private Boolean SpecialTaskWithRandomText(U8 sec, SpecialTaskType type)
         case TASK_FOR_EVERYONE:
             taskLevel = (pot_getSelectedRange(POTENTIOMETER_GIRLS) + pot_getSelectedRange(POTENTIOMETER_GUYS)) / 2; /* We just take the average here... */
             break;
+        case TASK_FOR_ENGINAATOR_TEAM:
+        	taskLevel = (pot_getSelectedRange(POTENTIOMETER_GIRLS) + pot_getSelectedRange(POTENTIOMETER_GUYS)) / 2; /* We just take the average here... */
+        	break;
         default:
             /* Should not happen. */
             taskLevel = -1;

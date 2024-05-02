@@ -159,6 +159,7 @@ Private U8 selectRandomTaskIndex(void);
 Private Boolean guysSpecialIntro(U8 sec);
 Private Boolean girlsSpecialIntro(U8 sec);
 Private Boolean EverybodySpecialIntro(U8 sec);
+Private Boolean EnginaatorSpecialIntro(U8 sec);
 Private Boolean genericIntroFunction(const IntroSequence * intro_ptr, U8 sec);
 
 Private void doFinalAction(void);
@@ -258,6 +259,14 @@ Private const ControllerEvent priv_everybody_drink_events[] =
      { .second = 59u, .upperText = "Proosit!",              .lowerText = "Cheers!",             .shot_action = OVERRIDE_FUNCTION         , .func = &everybodySpecialTask    },
 };
 
+Private const ControllerEvent priv_engikas_drink_events[] =
+{
+     { .second = 7u,  .upperText = "",                      .lowerText = "",                        		.shot_action = OVERRIDE_FUNCTION         , .func = &EnginaatorSpecialIntro   },
+     { .second = 21u, .upperText = "At the end of round",   .lowerText = "a task for Enginaator Team",  	.shot_action = BEERSHOT_BEGIN_FILLING    , .func = NULL },
+     { .second = 45u, .upperText = "Ready!",                .lowerText = "Task for Engika Team coming up", 	.shot_action = BEERSHOT_FULL             , .func = NULL },
+     { .second = 59u, .upperText = "Elagu Enginaator!",     .lowerText = "Proosit!",             			.shot_action = OVERRIDE_FUNCTION         , .func = &EnginaatorSpecialTask    },
+};
+
 
 /* This is a scheduler for special minutes.
  * It contains data about the frequency and offset of special minutes as well
@@ -266,7 +275,9 @@ Private const SchedulerTaskConf_T priv_scheduler_conf[NUMBER_OF_TASK_TYPES] =
 {
      {  .event_array = priv_girls_drink_events,     .event_cnt = NUMBER_OF_ITEMS(priv_girls_drink_events),      .bitmap_category = FILES_WOMEN     ,.bitmap_spicy = FILES_WOMEN_HOT },  /*   TASK_FOR_GIRLS        */
      {  .event_array = priv_guys_drink_events,      .event_cnt = NUMBER_OF_ITEMS(priv_guys_drink_events),       .bitmap_category = FILES_MEN       ,.bitmap_spicy = FILES_MEN_HOT   },  /*   TASK_FOR_GUYS         */
-     {  .event_array = priv_everybody_drink_events, .event_cnt = NUMBER_OF_ITEMS(priv_everybody_drink_events),  .bitmap_category = FILES_BESTIES ,.bitmap_spicy = FILES_ALL_HOT   },  /*   TASK_FOR_EVERYONE     */
+     {  .event_array = priv_everybody_drink_events, .event_cnt = NUMBER_OF_ITEMS(priv_everybody_drink_events),  .bitmap_category = FILES_BESTIES   ,.bitmap_spicy = FILES_ALL_HOT   },  /*   TASK_FOR_EVERYONE     */
+     {  .event_array = priv_engikas_drink_events, 	.event_cnt = NUMBER_OF_ITEMS(priv_engikas_drink_events),    .bitmap_category = FILES_ENGINAATOR,.bitmap_spicy = FILES_ENGINAATOR},  /*   TASK_FOR_ENGINAATOR_TEAM     */
+
 };
 
 
@@ -665,6 +676,20 @@ Private Boolean EverybodySpecialIntro(U8 sec)
     sequence.isInverted = FALSE;
     sequence.text_font = FONT_LARGE_FONT;
     sequence.text_str = "Round for All!";
+    sequence.text_x = DISPLAY_CENTER;
+    sequence.text_y = 7u;
+
+    return genericIntroFunction(&sequence, sec);
+}
+
+
+Private Boolean EnginaatorSpecialIntro(U8 sec)
+{
+    IntroSequence sequence;
+
+    sequence.isInverted = FALSE;
+    sequence.text_font = FONT_LARGE_FONT;
+    sequence.text_str = "Round for Enginaator Team!";
     sequence.text_x = DISPLAY_CENTER;
     sequence.text_y = 7u;
 
