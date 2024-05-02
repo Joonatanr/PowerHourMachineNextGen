@@ -126,7 +126,7 @@ void app_main(void)
                 NULL);
 
 	/* Configure the peripheral according to the LED type */
-    configure_led();
+    //configure_led();
 
 	/* Setup the TFT display. */
 	display_init();

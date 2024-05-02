@@ -159,9 +159,9 @@ Public void BitmapHandler_start(void)
             	continue;
             }
 
-            //printf("Trying to allocate for %s fname : %s strlen : %d\n", filelist_ptr->directoryName, FI.fname, strlen(FI.fname));
+           // printf("Trying to allocate for %s fname : %s strlen : %d\n", filelist_ptr->directoryName, FI.fname, strlen(FI.fname));
             /* Add to the list of filenames. */
-            filelist_ptr->fileNames[ix] = malloc(strlen(FI.fname) * sizeof(char));
+            filelist_ptr->fileNames[ix] = heap_caps_malloc(64 * sizeof(char), MALLOC_CAP_32BIT);
             assert(filelist_ptr->fileNames[ix]);
 
             strcpy(filelist_ptr->fileNames[ix], FI.fname);
