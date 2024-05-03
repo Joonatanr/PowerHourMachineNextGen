@@ -688,7 +688,7 @@ Private Boolean EnginaatorSpecialIntro(U8 sec)
     IntroSequence sequence;
 
     sequence.isInverted = FALSE;
-    sequence.text_font = FONT_LARGE_FONT;
+    sequence.text_font = FONT_MEDIUM_FONT;
     sequence.text_str = "Round for Enginaator Team!";
     sequence.text_x = DISPLAY_CENTER;
     sequence.text_y = 7u;
