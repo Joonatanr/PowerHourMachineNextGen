@@ -236,14 +236,26 @@ Private U8 priv_TextArrayAllLevel1_counter[NUMBER_OF_ITEMS(priv_TextArrayAllLeve
 
 Private const Task_T priv_TextArrayEngikasLevel1[] =
 {
-	  {  "Vodka round"           , "for Enginaator",       "Core Team"        ,  .nude_level = 0u, .sexy_level = 0u    }, /* 1  */
-	  {  "Enginaator Team"       , "must finish",          "their drinks"     ,  .nude_level = 0u, .sexy_level = 0u    }, /* 2  */
-	  {  "Enginaator Team"       , "does a waterfall",     NULL     	      ,  .nude_level = 0u, .sexy_level = 0u    }, /* 3  */
+	  {  "Vodka round"           , "for Enginaator",       "Core Team"        			,  .nude_level = 0u, .sexy_level = 0u    }, /* 1  */
+	  {  "Vodka round"           , "for Enginaator",       "Core Team"        			,  .nude_level = 0u, .sexy_level = 0u    }, /* 2  */
+	  {  "Enginaator Team"       , "must finish",          "their drinks"     			,  .nude_level = 0u, .sexy_level = 0u    }, /* 3  */
+	  {  "Enginaator Team"       , "does a waterfall",     NULL     	      			,  .nude_level = 0u, .sexy_level = 0u    }, /* 4  */
+	  {  "Oldest Enginaator"     , "member drinks 2x",     NULL       		  			,  .nude_level = 0u, .sexy_level = 0u    }, /* 5  */
+	  {  "Enginaator members"    , "must drink while",     "pretending to be hammers"   ,  .nude_level = 0u, .sexy_level = 0u    }, /* 6  */
+	  {  "All female engineers"  , "drink 2x",             NULL     				    ,  .nude_level = 0u, .sexy_level = 0u    }, /* 7  */
+	  {  "Enginaator Team"       , "skips this round",     "Others drink 2x"    		,  .nude_level = 0u, .sexy_level = 0u    }, /* 8  */
+
+	  {  "All Enginaator team"   , "members lose",          "their socks"     	        ,  .nude_level = 1u, .sexy_level = 0u    }, /* 9  */
+	  {  "Enginaator MO"         , "drinks",                "vodka"        	     		,  .nude_level = 0u, .sexy_level = 0u    }, /* 10  */
+	  {  "Enginaator PR"         , "drinks",                "vodka"        	     		,  .nude_level = 0u, .sexy_level = 0u    }, /* 11  */
+	  {  "Enginaator FR"         , "drinks",                "vodka"        	     		,  .nude_level = 0u, .sexy_level = 0u    }, /* 12  */
+	  {  "Enginaator Task Resp." , "drinks",                "vodka"        	     		,  .nude_level = 0u, .sexy_level = 0u    }, /* 13  */
+	  {  "Enginaator Pax Resp."  , "drinks",                "vodka"        	     		,  .nude_level = 0u, .sexy_level = 0u    }, /* 14  */
 
 	  /* Strange cases, where somebody is playing on easy mode, but with maximum nudity/sexyness. */
-	  {  "Enginaator Team can"  , "confiscate one item",    "of clothing"    , .nude_level = 3u, .sexy_level = 0u,   }, /* 9  */
-	  {  "Enginaator Team loses", "one item of",            "clothing"       , .nude_level = 3u, .sexy_level = 0u,   }, /* 10 */
-	  {  "All Enginaator guys"  , "lose their",             "shirts"         , .nude_level = 3u, .sexy_level = 0u,   }, /* 11 */
+	  {  "Enginaator Team can"  , "confiscate one item",    "of clothing"    , .nude_level = 3u, .sexy_level = 0u,   }, /* 15  */
+	  {  "Enginaator Team loses", "one item of",            "clothing"       , .nude_level = 3u, .sexy_level = 0u,   }, /* 16 */
+	  {  "All Enginaator guys"  , "lose their",             "shirts"         , .nude_level = 3u, .sexy_level = 0u,   }, /* 17 */
 };
 
 Private U8 priv_TextArrayEngikasLevel1_counter[NUMBER_OF_ITEMS(priv_TextArrayEngikasLevel1)];
