@@ -237,7 +237,13 @@ Private U8 priv_TextArrayAllLevel1_counter[NUMBER_OF_ITEMS(priv_TextArrayAllLeve
 Private const Task_T priv_TextArrayEngikasLevel1[] =
 {
 	  {  "Vodka round"           , "for Enginaator",       "Core Team"        ,  .nude_level = 0u, .sexy_level = 0u    }, /* 1  */
+	  {  "Enginaator Team"       , "must finish",          "their drinks"     ,  .nude_level = 0u, .sexy_level = 0u    }, /* 2  */
+	  {  "Enginaator Team"       , "does a waterfall",     NULL     	      ,  .nude_level = 0u, .sexy_level = 0u    }, /* 3  */
 
+	  /* Strange cases, where somebody is playing on easy mode, but with maximum nudity/sexyness. */
+	  {  "Enginaator Team can"  , "confiscate one item",    "of clothing"    , .nude_level = 3u, .sexy_level = 0u,   }, /* 9  */
+	  {  "Enginaator Team loses", "one item of",            "clothing"       , .nude_level = 3u, .sexy_level = 0u,   }, /* 10 */
+	  {  "All Enginaator guys"  , "lose their",             "shirts"         , .nude_level = 3u, .sexy_level = 0u,   }, /* 11 */
 };
 
 Private U8 priv_TextArrayEngikasLevel1_counter[NUMBER_OF_ITEMS(priv_TextArrayEngikasLevel1)];
@@ -363,7 +369,9 @@ Private U8 priv_TextArrayAllLevel2_counter[NUMBER_OF_ITEMS(priv_TextArrayAllLeve
 
 Private const Task_T priv_TextArrayEngikasLevel2[] =
 {
-	  {  "Vodka round"           , "for Enginaator",       "Core Team"        ,  .nude_level = 0u, .sexy_level = 0u    }, /* 1  */
+	  {  "Vodka round"           	 , "for Enginaator",       	"Core Team",  			 .nude_level = 0u, .sexy_level = 0u    }, /* 1  */
+	  {  "Enginaator Core Team must" , "explain how a vibrator","works, or drink vodka" ,.nude_level = 0u, .sexy_level = 0u    }, /* 2  */
+
 };
 
 Private U8 priv_TextArrayEngikasLevel2_counter[NUMBER_OF_ITEMS(priv_TextArrayEngikasLevel2)];
@@ -709,6 +717,11 @@ Public void SpecialTasks_init(void)
     memset(priv_TextArrayAllLevel2_counter, 0u, NUMBER_OF_ITEMS(priv_TextArrayAllLevel2));
     memset(priv_TextArrayAllLevel3_counter, 0u, NUMBER_OF_ITEMS(priv_TextArrayAllLevel3));
     memset(priv_TextArrayAllLevel4_counter, 0u, NUMBER_OF_ITEMS(priv_TextArrayAllLevel4));
+
+    memset(priv_TextArrayEngikasLevel1_counter, 0u, NUMBER_OF_ITEMS(priv_TextArrayEngikasLevel1));
+    memset(priv_TextArrayEngikasLevel2_counter, 0u, NUMBER_OF_ITEMS(priv_TextArrayEngikasLevel2));
+    memset(priv_TextArrayEngikasLevel3_counter, 0u, NUMBER_OF_ITEMS(priv_TextArrayEngikasLevel3));
+    memset(priv_TextArrayEngikasLevel4_counter, 0u, NUMBER_OF_ITEMS(priv_TextArrayEngikasLevel4));
 
 }
 
