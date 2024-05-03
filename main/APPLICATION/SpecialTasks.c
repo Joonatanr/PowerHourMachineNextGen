@@ -538,6 +538,9 @@ Private const Task_T priv_TextArrayEngikasLevel3[] =
     {  "{$} gets to"      		, "make a dare for",            "all the guys" ,   .nude_level = 0u, .sexy_level = 1u,  }, /* 15  */
     {  "{$} gets to"      		, "make a dare for",            "all the girls" ,  .nude_level = 0u, .sexy_level = 1u,  }, /* 16  */
 
+    {  "{$} must ",        		 "moan between shots"       ,"and drink 3x"       ,.nude_level = 0u, .sexy_level = 2u,  }, /* 12  */
+
+
 };
 
 Private U8 priv_TextArrayEngikasLevel3_counter[NUMBER_OF_ITEMS(priv_TextArrayEngikasLevel3)];
@@ -702,7 +705,33 @@ Private U8 priv_TextArrayAllLevel4_counter[NUMBER_OF_ITEMS(priv_TextArrayAllLeve
 
 Private const Task_T priv_TextArrayEngikasLevel4[] =
 {
-	  {  "Vodka round"           , "for Enginaator",       "Core Team"        ,  .nude_level = 0u, .sexy_level = 0u    }, /* 1  */
+	  {  "Vodka round"           , "for Enginaator",       "Core Team"        , .nude_level = 0u, .sexy_level = 0u    }, /* 1  */
+	  {  "{$} must"              , "swear like a trooper", "and drink 3x"     , .nude_level = 0u, .sexy_level = 0u    }, /* 2  */
+	  {  "{$} can spank"         , "a player",                  NULL          , .nude_level = 0u, .sexy_level = 2u    }, /* 3  */
+
+	  {  "{$} must "   			 , "spin the bottle",              NULL       , .nude_level = 0u, .sexy_level = 1u,   }, /* 4  */
+	  {  "{$} must "   			 , "spin the bottle",              NULL       , .nude_level = 0u, .sexy_level = 2u,   }, /* 5  */
+
+	  {  "Enginaator Team "      , "must re-enact a",      "porn scene"       ,  .nude_level = 0u, .sexy_level = 2u   }, /* 6  */
+
+	  {  "{$} must"     		, " choose a male",        "player to slap"   ,  .nude_level = 0u, .sexy_level = 2u,  }, /* 7  */
+	  {  "{$} must"     		, "choose a female",       "player to slap"   ,  .nude_level = 0u, .sexy_level = 2u,  }, /* 8  */
+	  {  "{$} gives vodka to"  	, "the player she believes",  "has largest penis", .nude_level = 0u, .sexy_level = 2u, },/*  9  */
+	  {  "{$} must name"       	, "10 sex positions",         NULL            ,  .nude_level = 0u, .sexy_level = 1u,  }, /* 10  */
+
+	  {  "Enginaator girls must", "drink while squeezing"	,"their boobs"     	  , .nude_level = 0u, .sexy_level = 3u,   }, /* 15  */
+	  {  "{$} must name"       	, "3 sex positions they"	," would like to try" , .nude_level = 0u, .sexy_level = 3u,   }, /* 16  */
+	  {  "Enginaator Team" 		, "must do"					,"bodyshots" 		  , .nude_level = 0u, .sexy_level = 3u,   }, /* 17  */
+	  {  "{$} can"       		, "order 1 person to do"	,"a bodyshot"         , .nude_level = 0u, .sexy_level = 3u,   }, /* 18  */
+	  {  "{$} must"     		, "choose a girl and"		,"french-kiss her"    , .nude_level = 0u, .sexy_level = 3u,   }, /* 19  */
+	  {  "{$} must"     		, "choose 2 guys, who must" ,"kiss or drink vodka", .nude_level = 0u, .sexy_level = 3u,   }, /* 20  */
+
+	  {  "{$} "    				,"must remove" 	, "2 items of clothing" 		  ,   .nude_level = 2u, .sexy_level = 0u,  }, /* 8 */
+	  {  "{$} "   				,"must remove" 	, "2 items of clothing" 		  ,   .nude_level = 2u, .sexy_level = 0u,  }, /* 9 */
+	  {  "{$} "    				,"must remove" 	, "2 items of clothing"	 		  ,   .nude_level = 2u, .sexy_level = 0u,  }, /* 10 */
+	  {  "{$} can " 			,"confiscate" 	, "2 items of clothing" 		  ,   .nude_level = 2u, .sexy_level = 1u,  }, /* 11 */
+	  {  "{$} can " 		 	,"confiscate" 	, "2 items of clothing" 	      ,   .nude_level = 2u, .sexy_level = 1u,  }, /* 12 */
+	  {  "{$} can "	 			,"confiscate" 	, "2 items of clothing" 		  ,   .nude_level = 2u, .sexy_level = 1u,  }, /* 13 */
 };
 
 Private U8 priv_TextArrayEngikasLevel4_counter[NUMBER_OF_ITEMS(priv_TextArrayEngikasLevel4)];
