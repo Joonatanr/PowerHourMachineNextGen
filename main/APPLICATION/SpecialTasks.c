@@ -219,7 +219,6 @@ Private const Task_T priv_TextArrayAllLevel1[] =
      {  "Those that have"        , "french-kissed today",    "drink 3x"       ,   .nude_level = 0u, .sexy_level = 1u   },
      {  "One closest to machine" , "gets slapped on",        "the ass"        ,   .nude_level = 0u, .sexy_level = 2u   },
 
-
 /* Strange cases, where somebody is playing on easy mode, but with maximum nudity. */
      {  "Everyone takes off"     , "one item of",             "clothing"      ,   .nude_level = 3u, .sexy_level = 0u  },
      {  "Everyone takes off"     , "one item of",             "clothing"      ,   .nude_level = 3u, .sexy_level = 0u  },
@@ -381,8 +380,16 @@ Private U8 priv_TextArrayAllLevel2_counter[NUMBER_OF_ITEMS(priv_TextArrayAllLeve
 
 Private const Task_T priv_TextArrayEngikasLevel2[] =
 {
-	  {  "Vodka round"           	 , "for Enginaator",       	"Core Team",  			 .nude_level = 0u, .sexy_level = 0u    }, /* 1  */
-	  {  "Enginaator Core Team must" , "explain how a vibrator","works, or drink vodka" ,.nude_level = 0u, .sexy_level = 0u    }, /* 2  */
+	{  "Vodka round"           	   , "for Enginaator",       	 "Core Team",  			  .nude_level = 0u, .sexy_level = 0u   }, /* 1  */
+	{  "Enginaator Core Team must" , "explain how a vibrator",   "works, or drink vodka", .nude_level = 0u, .sexy_level = 0u 	}, /* 2  */
+	{  "Shortest Enginaator"       , "Team Member takes",     	 "vodka shot"     		, .nude_level = 0u, .sexy_level = 0u   }, /* 3  */
+	{  "Most Handy Enginaator"     , "Enginaator Team Member",   " takes a vodka shot"  , .nude_level = 0u, .sexy_level = 0u    }, /* 4  */
+
+	{  "All male Engineers"        , "drink vodka",   							 NULL   , .nude_level = 0u, .sexy_level = 0u    }, /* 5  */
+
+    {  "Enginaator team members", "lose 1 item of",           "clothing"     			, .nude_level = 2u, .sexy_level = 0u   	}, /* 6  */
+    {  "Enginaator team members", "lose 2 items of",          "clothing"     			, .nude_level = 3u, .sexy_level = 0u   	}, /* 7  */
+    {  "Members of Enginaator"  , "team must switch",         "their shirts" 			, .nude_level = 3u, .sexy_level = 0u   	}, /* 8  */
 
 };
 
@@ -415,6 +422,8 @@ Private const Task_T priv_TextArrayGirlsLevel3[] =
      { " Girls must make"      ,   "a kinky"   ,                  "toast"      ,  .nude_level = 0u, .sexy_level = 1u }, /* 19   */
      {  "All girls must"       ,   "drink with hands",    "on their butts"     ,  .nude_level = 0u, .sexy_level = 2u }, /* 20   */
      { "All girls must"        ,   "drink while",          "twerking"          ,  .nude_level = 0u, .sexy_level = 2u }, /* 21   */
+     { "Girls who have touched",   "a penis within 24h",   "drink 3x"          ,  .nude_level = 0u, .sexy_level = 1u }, /* 22   */
+
 };
 
 Private U8 priv_TextArrayGirlsLevel3_counter[NUMBER_OF_ITEMS(priv_TextArrayGirlsLevel3)];
