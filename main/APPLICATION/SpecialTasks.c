@@ -517,7 +517,27 @@ Private U8 priv_TextArrayAllLevel3_counter[NUMBER_OF_ITEMS(priv_TextArrayAllLeve
 
 Private const Task_T priv_TextArrayEngikasLevel3[] =
 {
-	  {  "Vodka round"           , "for Enginaator",       "Core Team"        ,  .nude_level = 0u, .sexy_level = 0u    }, /* 1  */
+	{  "Vodka round"           , "for Enginaator",       "Core Team"        	,  	.nude_level = 0u, .sexy_level = 0u   }, /* 1  */
+
+	{  "Enginaator Logistics resp."  , "does 5 squats"	,   " with Quacks!"  	,	.nude_level = 0u, .sexy_level = 1u   }, /* 2  */
+	{  "Enginaator FR must "      	 , "sing Ave Maria"	,  " or drink vodka"  	,  	.nude_level = 0u, .sexy_level = 1u   }, /* 3  */
+	{  "Enginaator MO"        		 , "switch clothes ", "with somebody"   	,  	.nude_level = 1u, .sexy_level = 1u   }, /* 4  */
+	{  "Enginaator Task resp."       , "must construct a", "tower of beer cans ",  	.nude_level = 0u, .sexy_level = 1u   }, /* 5  */
+
+    {  "{$} must do"				 , "a TikTok dance" ,"while drinking",   		.nude_level = 0u, .sexy_level = 1u,  }, /* 6  */
+    {  "Everybody who has"           , "seen {$} naked" ,"drinks 3x" ,       		.nude_level = 0u, .sexy_level = 2u,  }, /* 7  */
+
+    {  "{$} "    					 ,"must remove" 	, "1 item of clothing" ,   .nude_level = 2u, .sexy_level = 0u,  }, /* 8 */
+    {  "{$} "   				 	 ,"must remove" 	, "1 item of clothing" ,   .nude_level = 2u, .sexy_level = 0u,  }, /* 9 */
+    {  "{$} "    					 ,"must remove" 	, "1 item of clothing" ,   .nude_level = 2u, .sexy_level = 0u,  }, /* 10 */
+    {  "{$} can " 					 ,"confiscate" 		, "1 item of clothing" ,   .nude_level = 2u, .sexy_level = 1u,  }, /* 11 */
+    {  "{$} can " 					 ,"confiscate" 		, "1 item of clothing" ,   .nude_level = 2u, .sexy_level = 1u,  }, /* 12 */
+    {  "{$} can "	 				 ,"confiscate" 		, "1 item of clothing" ,   .nude_level = 2u, .sexy_level = 1u,  }, /* 13 */
+
+    {  "{$} shall get"         	, "a Truth or Dare from",  "person next to them" , .nude_level = 0u, .sexy_level = 1u,  }, /* 14  */
+    {  "{$} gets to"      		, "make a dare for",            "all the guys" ,   .nude_level = 0u, .sexy_level = 1u,  }, /* 15  */
+    {  "{$} gets to"      		, "make a dare for",            "all the girls" ,  .nude_level = 0u, .sexy_level = 1u,  }, /* 16  */
+
 };
 
 Private U8 priv_TextArrayEngikasLevel3_counter[NUMBER_OF_ITEMS(priv_TextArrayEngikasLevel3)];
@@ -950,6 +970,14 @@ Private Boolean DrinkTwiceTask(U8 sec, SpecialTaskType type)
 Private void ReplaceStringEscapeChars(const char * str, char * dest)
 {
     const char * ps = str;
+    const char EnginaatorTeamMembers[5][] =
+    {
+    		"Enginaator MO",
+			"Enginaator Log. resp.",
+			"Enginaator FR",
+			"Enginaator PR",
+			"Enginaator task. resp."
+    };
 
     if (ps == NULL)
     {
@@ -962,8 +990,9 @@ Private void ReplaceStringEscapeChars(const char * str, char * dest)
         {
             if (*(ps+1) == '$' && *(ps+2) == '}' )
             {
-                ps+=3;
-                dest += addstr(dest, "UNDEFINED");
+                U8 index = generate_random_number(4u);
+            	ps+=3;
+                dest += addstr(dest, EnginaatorTeamMembers[index]);
             }
             else
             {
