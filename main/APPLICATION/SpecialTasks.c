@@ -380,16 +380,32 @@ Private U8 priv_TextArrayAllLevel2_counter[NUMBER_OF_ITEMS(priv_TextArrayAllLeve
 
 Private const Task_T priv_TextArrayEngikasLevel2[] =
 {
-	{  "Vodka round"           	   , "for Enginaator",       	 "Core Team",  			  .nude_level = 0u, .sexy_level = 0u   }, /* 1  */
+	{  "Vodka round"           	   , "for Enginaator",       	 "Core Team",  			  .nude_level = 0u, .sexy_level = 0u    }, /* 1  */
 	{  "Enginaator Core Team must" , "explain how a vibrator",   "works, or drink vodka", .nude_level = 0u, .sexy_level = 0u 	}, /* 2  */
-	{  "Shortest Enginaator"       , "Team Member takes",     	 "vodka shot"     		, .nude_level = 0u, .sexy_level = 0u   }, /* 3  */
+	{  "Shortest Enginaator"       , "Team Member takes",     	 "vodka shot"     		, .nude_level = 0u, .sexy_level = 0u    }, /* 3  */
 	{  "Most Handy Enginaator"     , "Enginaator Team Member",   " takes a vodka shot"  , .nude_level = 0u, .sexy_level = 0u    }, /* 4  */
+	{  "Person closest to"         , "machine must demonstrate", " creative use of duct tape"  , .nude_level = 0u, .sexy_level = 1u    }, /* 5 */
 
-	{  "All male Engineers"        , "drink vodka",   							 NULL   , .nude_level = 0u, .sexy_level = 0u    }, /* 5  */
+	{  "All male Engineers"        , "drink vodka",   							 NULL   , .nude_level = 0u, .sexy_level = 0u    }, /* 6  */
+	{  "Everybody who has"         , "done car repairs",  		 "this week drink 3x"   , .nude_level = 0u, .sexy_level = 0u    }, /* 7  */
+	{  "Guy with the"              , "biggest tools",  		     "drinks 3x"            , .nude_level = 0u, .sexy_level = 1u    }, /* 8  */
 
-    {  "Enginaator team members", "lose 1 item of",           "clothing"     			, .nude_level = 2u, .sexy_level = 0u   	}, /* 6  */
-    {  "Enginaator team members", "lose 2 items of",          "clothing"     			, .nude_level = 3u, .sexy_level = 0u   	}, /* 7  */
-    {  "Members of Enginaator"  , "team must switch",         "their shirts" 			, .nude_level = 3u, .sexy_level = 0u   	}, /* 8  */
+    {  "Enginaator team members", "lose 1 item of",           "clothing"     			, .nude_level = 2u, .sexy_level = 0u   	}, /* 9  */
+    {  "Enginaator team members", "lose 2 items of",          "clothing"     			, .nude_level = 3u, .sexy_level = 0u   	}, /* 10  */
+    {  "Members of Enginaator"  , "team must switch",         "their shirts" 			, .nude_level = 3u, .sexy_level = 0u   	}, /* 11  */
+
+    {  "Enginaator team takes off"   , "1 Item of Clothing", "or drinks vodka"    		,  .nude_level = 1u, .sexy_level = 0u	},  /* 12  */
+    {  "Enginaator team off"   	     , "1 Item of Clothing",          NULL        		,  .nude_level = 2u, .sexy_level = 0u 	},  /* 13  */
+    {  "Enginaator team takes off"   , "1 Item of Clothing", "or drinks vodka"    		,  .nude_level = 1u, .sexy_level = 0u 	},  /* 14  */
+    {  "Enginaator team takes off"   , "1 Item of Clothing",          NULL        		,  .nude_level = 2u, .sexy_level = 0u 	},  /* 15  */
+
+	{  "Enginaator MO must say"      , "Yes to everything",   " for 5 minutes"  		,  .nude_level = 0u, .sexy_level = 1u   }, /* 16  */
+	{  "Enginaator FR must "      	 , "make a sales pitch",  " for 2 minutes"  		,  .nude_level = 0u, .sexy_level = 1u   }, /* 17  */
+	{  "Enginaator Pax resp."        , "must drink under the ", "table for 5 minutes"   ,  .nude_level = 0u, .sexy_level = 1u   }, /* 18  */
+	{  "Enginaator PR can only"      , "speak while singing", " for 5 minutes"  		,  .nude_level = 0u, .sexy_level = 1u   }, /* 19  */
+	{  "Enginaator Task resp."       , "must construct a", "sex toy within 5 min. "  	,  .nude_level = 0u, .sexy_level = 1u   }, /* 20  */
+
+
 
 };
 
@@ -416,7 +432,7 @@ Private const Task_T priv_TextArrayGirlsLevel3[] =
      {  "The last girl"        ,   "to finish shot"  ,    "loses 1 clothing"   ,  .nude_level = 2u, .sexy_level = 0u }, /* 13   */
      {  "The last girl"        ,   "to finish shot"  ,    "loses 1 clothing"   ,  .nude_level = 2u, .sexy_level = 0u }, /* 14   */
      {  "Girl showing the"     ,   "most cleavage"  ,           "drinks 3x"    ,  .nude_level = 1u, .sexy_level = 1u }, /* 15   */
-     {  "Girls: 1 shot for"    ,   "each guy you slept"  , "with this year"   ,  .nude_level = 0u, .sexy_level = 2u }, /* 16   */
+     {  "Girls: 1 shot for"    ,   "each guy you slept"  , "with this year"   ,  .nude_level = 0u, .sexy_level = 2u },  /* 16   */
      {  "All girls with"       ,   "black underwear"      , "drink vodka"      ,  .nude_level = 0u, .sexy_level = 1u }, /* 17   */
      { " Girls must make"      ,   "a naughty"   ,                "toast"      ,  .nude_level = 0u, .sexy_level = 1u }, /* 18   */
      { " Girls must make"      ,   "a kinky"   ,                  "toast"      ,  .nude_level = 0u, .sexy_level = 1u }, /* 19   */
