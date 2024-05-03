@@ -21,13 +21,9 @@
 #include "LcdWriter.h"
 
 /* For debugging */
-Private led_strip_handle_t led_strip;
 Private const char *TAG = "PH Main";
 Private const char priv_version_string[] = "Machine 5.0";
-#define BLINK_GPIO 48u
 
-
-Private void configure_led(void);
 void hw_task(void *pvParameter);
 
 Private void showStartScreen(void);
@@ -211,8 +207,8 @@ Private void showStartScreen(void)
     vTaskDelay(1000 / portTICK_PERIOD_MS);
     //LcdWriter_drawChar('0', 10, 10, FONT_TNR_HUGE_NUMBERS);
     LcdWriter_drawStringCenter("Power Hour", (DISPLAY_WIDTH / 2u) + 4u, 80u, FONT_LARGE_FONT, disp_text_color, disp_background_color);
-    LcdWriter_drawStringCenter(priv_version_string, (DISPLAY_WIDTH / 2u) + 4u, 110u, FONT_MEDIUM_FONT, disp_text_color, disp_background_color);
-    LcdWriter_drawStringCenter("Enginaator Edition", (DISPLAY_WIDTH / 2u) + 4u, 135u, FONT_LARGE_FONT, disp_text_color, disp_background_color);
+    LcdWriter_drawStringCenter(priv_version_string, (DISPLAY_WIDTH / 2u) + 4u, 110u, FONT_LARGE_FONT, disp_text_color, disp_background_color);
+    LcdWriter_drawStringCenter("Enginaator Edition", (DISPLAY_WIDTH / 2u) + 4u, 145u, FONT_LARGE_FONT, disp_text_color, disp_background_color);
 
     display_flushBuffer(0u, 0u, DISPLAY_WIDTH, DISPLAY_HEIGHT);
     vTaskDelay(5000 / portTICK_PERIOD_MS);
@@ -240,21 +236,4 @@ void hw_task(void *pvParameter)
 	  /* Call the thread every 20 milliseconds, hopefully... */
 	  hardware_main();
   }
-}
-
-/* Onboard RGB LED is used for debugging purposes. */
-static void configure_led(void)
-{
-    ESP_LOGI(TAG, "Example configured to blink addressable LED!");
-    /* LED strip initialization with the GPIO and pixels number*/
-    led_strip_config_t strip_config = {
-        .strip_gpio_num = BLINK_GPIO,
-        .max_leds = 1, // at least one LED on board
-    };
-    led_strip_rmt_config_t rmt_config = {
-        .resolution_hz = 10 * 1000 * 1000, // 10MHz
-    };
-    ESP_ERROR_CHECK(led_strip_new_rmt_device(&strip_config, &rmt_config, &led_strip));
-    /* Set all LED off to clear all pixels */
-    led_strip_clear(led_strip);
 }

@@ -208,15 +208,26 @@ Private Boolean priv_is_dedication_screen_exit = FALSE;
 /* Dedication screen functions*/
 Private void dedication_start(void)
 {
-    U8 yCoord = 0u;
-    const U8 line_height = 16u;
-
     priv_is_dedication_screen_exit = FALSE;
 
     display_fill(COLOR_RED);
 
-    display_drawString("This Power Hour Machine... TODO",           0u, yCoord,  FONT_MEDIUM_FONT, FALSE);
-    yCoord += line_height;
+    LcdWriter_resetLine();
+    LcdWriter_setFont(FONT_SMALL_FONT);
+    LcdWriter_setLineDistance(2u);
+
+    LcdWriter_printf("\n");
+    LcdWriter_printf("This Power Hour Machine was crafted during \n");
+    LcdWriter_printf("the Engineering Competition Enginaator 2024\n");
+    LcdWriter_printf("with great assistance from Fred Virve.\n\n");
+
+    LcdWriter_printf("It was built for Thor, Mia, Mirtel, Anette\n");
+    LcdWriter_printf("and Ott - the Core Team of Enginaator 2024 \n");
+    LcdWriter_printf("as well as for all Engineering Competition \n");
+    LcdWriter_printf("Core Teams yet to come! \n\n");
+
+    LcdWriter_printf("May your perseverance, dedication and hard work \n");
+    LcdWriter_printf("be an inspiration to Engineers everywhere! \n\n");
 
     /* Basically we wait for ANY key to be pressed. */
     buttons_subscribeListener(UP_BUTTON,    dedicationExitListener);

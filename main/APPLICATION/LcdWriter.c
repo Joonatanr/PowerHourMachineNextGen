@@ -14,12 +14,23 @@
 Private U16 priv_line_distance = 18u;
 Private U16 priv_char_buf[4000u];
 
+/* Variables for using the custom printf function */
+Private U16 priv_current_line = 0;
+Private U16 priv_current_line_distance = 4;
+Private FontType_t priv_current_printf_font = FONT_ARIAL_12;
+Private U16 priv_current_printf_x = 0;
+
+Private char priv_int_buffer[20];
+
+/***************************** Private function forward declarations  *****************************/
+
+Private U16 getPrintfYCoord(void);
 
 
 /***************************** Public functions  **************************************************/
-Public U8 LcdWriter_drawChar(char c, int x, int y, FontType_t font)
+Public U16 LcdWriter_drawChar(char c, int x, int y, FontType_t font)
 {
-    U8 res = 0u;
+    U16 res = 0u;
     U16 index;
 
     if(c >= 0x20u)
@@ -55,9 +66,9 @@ Public U8 LcdWriter_drawChar(char c, int x, int y, FontType_t font)
     return res;
 }
 
-Public U8 LcdWriter_drawCharColored(char c, int x, int y, FontType_t font, U16 foreground, U16 background)
+Public U16 LcdWriter_drawCharColored(char c, int x, int y, FontType_t font, U16 foreground, U16 background)
 {
-    U8 res = 0u;
+    U16 res = 0u;
     U32 ix;
     U16 index;
     U16 total_size;
@@ -142,7 +153,7 @@ Public void LcdWriter_drawString(char * str, int x, int y, FontType_t font)
     }
 }
 
-Public void LcdWriter_drawColoredString(const char * str, int x, int y, FontType_t font, U16 foreground, U16 background)
+Public U16 LcdWriter_drawColoredString(const char * str, int x, int y, FontType_t font, U16 foreground, U16 background)
 {
     U16 xCoord = x;
     U16 yCoord = y;
@@ -163,6 +174,8 @@ Public void LcdWriter_drawColoredString(const char * str, int x, int y, FontType
             str_ptr++;
         }
     }
+
+    return LcdWriter_getStringWidth(str, font);
 }
 
 Public U16 LcdWriter_getStringWidth(const char * str, FontType_t font)
@@ -234,5 +247,83 @@ Public void display_drawString(const char * str, U8 x, U8 y, FontType_t font, Bo
     {
         LcdWriter_drawColoredString(str, x, y, font, disp_text_color, disp_background_color);
     }
+}
+
+Public void LcdWriter_resetLine(void)
+{
+	priv_current_line = 0;
+	priv_current_printf_x = 0;
+}
+
+Public void LcdWriter_setFont(FontType_t font)
+{
+	priv_current_printf_font = font;
+}
+
+Public void LcdWriter_setLineDistance(U16 distance)
+{
+	priv_current_line_distance = distance;
+}
+
+Public void LcdWriter_setLine(U16 line)
+{
+	priv_current_line = line;
+}
+
+Public void LcdWriter_printf(const char* format, ...)
+{
+    va_list valist;
+    va_start(valist, format);
+    int i;
+    char *s;
+
+
+    while(*format)
+    {
+    	if(*format == '\n')
+    	{
+    		priv_current_line++;
+    		priv_current_printf_x = 0;
+    		format++;
+    	}
+    	else if(*format != '%')
+        {
+        	priv_current_printf_x += LcdWriter_drawCharColored(*format, priv_current_printf_x, getPrintfYCoord(), priv_current_printf_font, disp_text_color, disp_background_color);
+        	format++;
+        }
+        else
+        {
+            switch(*++format)
+            {
+            case 'c':
+                i = va_arg(valist, int);
+                priv_current_printf_x += LcdWriter_drawCharColored((char)i, priv_current_printf_x, getPrintfYCoord(), priv_current_printf_font, disp_text_color, disp_background_color);
+                break;
+            case 's':
+                s = va_arg(valist, char*);
+                /* TODO */
+                priv_current_printf_x += LcdWriter_drawColoredString(s, priv_current_printf_x, getPrintfYCoord(), priv_current_printf_font, disp_text_color, disp_background_color);
+                break;
+            case 'd':
+            case 'i':
+            	/* TODO */
+                i = va_arg(valist, int);
+                long2string(i, priv_int_buffer);
+                priv_current_printf_x += LcdWriter_drawColoredString(priv_int_buffer, priv_current_printf_x, getPrintfYCoord(), priv_current_printf_font, disp_text_color, disp_background_color);
+                break;
+            }
+
+            ++format;
+        }
+    }
+}
+
+
+Private U16 getPrintfYCoord(void)
+{
+	U16 printLineWidth = font_getFontHeight(priv_current_printf_font);
+	printLineWidth += priv_current_line_distance;
+
+	return printLineWidth * priv_current_line;
 }
 
