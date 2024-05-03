@@ -17,6 +17,7 @@
 #include "spi_handler.h"
 #include "esp_log.h"
 #include "esp_timer.h"
+#include "systimer.h"
 
 /*****************************************************************************************************
  *
@@ -99,6 +100,7 @@ Private void configure_timer(void)
 void timer_callback_10msec(void *param)
 {
 	buttons_cyclic10msec();
+	systimer2_increment();
 }
 
 

@@ -12,7 +12,7 @@ Private U16 priv_seed = 0u;
 
 Public void regenerate_random_number_seed(void)
 {
-    priv_seed = systimer_getTimestamp();
+    priv_seed = systimer2_getTimer();
     /* We initialize the pseudo random number generator. */
     srand(priv_seed);
 }
