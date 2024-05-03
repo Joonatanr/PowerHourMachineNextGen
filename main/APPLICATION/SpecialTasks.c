@@ -995,18 +995,19 @@ Private Boolean DrinkTwiceTask(U8 sec, SpecialTaskType type)
  *
  *****************************************************************************************************/
 
+const char EnginaatorTeamMembers[5][32] =
+{
+		"Enginaator MO",
+		"Enginaator Log. resp.",
+		"Enginaator FR",
+		"Enginaator PR",
+		"Enginaator task. resp."
+};
+
 
 Private void ReplaceStringEscapeChars(const char * str, char * dest)
 {
     const char * ps = str;
-    const char EnginaatorTeamMembers[5][] =
-    {
-    		"Enginaator MO",
-			"Enginaator Log. resp.",
-			"Enginaator FR",
-			"Enginaator PR",
-			"Enginaator task. resp."
-    };
 
     if (ps == NULL)
     {
