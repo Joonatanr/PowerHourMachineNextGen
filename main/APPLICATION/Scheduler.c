@@ -210,7 +210,7 @@ Private void dedication_start(void)
 {
     priv_is_dedication_screen_exit = FALSE;
 
-    display_fill(COLOR_RED);
+    display_clear();
 
     LcdWriter_resetLine();
     LcdWriter_setFont(FONT_SMALL_FONT);

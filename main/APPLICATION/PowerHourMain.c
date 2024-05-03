@@ -833,7 +833,10 @@ Private void incrementTimer(void)
 
 Private void setEventText(const ControllerEvent* event)
 {
-    if (event->upperText != NULL)
+    clearTextOnLine(0u);
+    clearTextOnLine(1u);
+
+	if (event->upperText != NULL)
     {
         setTextOnLine(event->upperText, 0u);
     }
