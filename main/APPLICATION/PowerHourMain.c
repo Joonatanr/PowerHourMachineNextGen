@@ -497,7 +497,7 @@ Public void powerHour_cyclic1000msec(void)
             	priv_pot_override_counter--;
             	drawPotentiometerData();
 
-            	if (priv_pot_override_counter == 0)
+            	if (priv_pot_override_counter <= 0)
             	{
             		priv_is_pot_override_active = false;
             	}
