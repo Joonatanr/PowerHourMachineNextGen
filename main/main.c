@@ -19,10 +19,13 @@
 #include "PowerHourMain.h"
 #include "BitmapHandler.h"
 #include "LcdWriter.h"
+#include "SpecialTasks.h"
+
+#define STR_LENGTH_TEST
 
 /* For debugging */
 Private const char *TAG = "PH Main";
-Private const char priv_version_string[] = "Machine 5.0";
+Private const char priv_version_string[] = "Machine 5.1";
 
 void hw_task(void *pvParameter);
 
@@ -146,6 +149,11 @@ void app_main(void)
     Scheduler_StartTasks();
     vTaskDelay(100 / portTICK_PERIOD_MS);
 
+#ifdef STR_LENGTH_TEST
+    SpecialTask_StringLengthSanityTest();
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
+#endif
+
 #ifdef POT_TEST
     timer_delay_msec(200u);
     pot_test();
@@ -154,11 +162,6 @@ void app_main(void)
 #ifdef STR_TEST
     str_test();
     timer_delay_msec(10000);
-#endif
-
-#ifdef STR_LENGTH_TEST
-    SpecialTask_StringLengthSanityTest();
-    timer_delay_msec(5000);
 #endif
 
     //We show the initial start screen for a while.

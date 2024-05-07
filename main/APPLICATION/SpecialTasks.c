@@ -819,6 +819,8 @@ Public void SpecialTask_StringLengthSanityTest(void)
     U8 category;
     U16 length;
 
+    printf("Starting string sanity test\n");
+
     for(category = 0u; category < NUMBER_OF_TASK_TYPES; category++)
     {
         for (ix = 0u; ix < 4u; ix++)
@@ -843,6 +845,8 @@ Public void SpecialTask_StringLengthSanityTest(void)
             }
         }
     }
+
+    printf("Ending string sanity test\n");
 }
 
 Private Boolean isStringFitForDisplay(const char * str, U16 * length_dest)
