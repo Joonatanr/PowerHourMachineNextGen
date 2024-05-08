@@ -21,7 +21,7 @@
 #include "LcdWriter.h"
 #include "SpecialTasks.h"
 
-#define STR_LENGTH_TEST
+//#define STR_LENGTH_TEST
 
 /* For debugging */
 Private const char *TAG = "PH Main";
