@@ -2,7 +2,6 @@
 
 #include "driver/gpio.h"
 #include "esp_log.h"
-#include "led_strip.h"
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -24,7 +23,7 @@
 //#define STR_LENGTH_TEST
 
 /* For debugging */
-Private const char *TAG = "PH Main";
+//Private const char *TAG = "PH Main";
 Private const char priv_version_string[] = "Machine 5.1";
 
 void hw_task(void *pvParameter);
@@ -123,9 +122,6 @@ void app_main(void)
                 NULL,
                 1,
                 NULL);
-
-	/* Configure the peripheral according to the LED type */
-    //configure_led();
 
 	/* Setup the TFT display. */
 	display_init();
