@@ -24,7 +24,7 @@
 
 /* For debugging */
 //Private const char *TAG = "PH Main";
-Private const char priv_version_string[] = "Machine 5.1";
+Private const char priv_version_string[] = "Machine 5.2";
 
 void hw_task(void *pvParameter);
 
