@@ -16,7 +16,7 @@
 #define GET_X_FROM_CENTER(center,height) (((center) >= ((height) / 2)) ? (center) - ((height) / 2) : 0u)
 #define GET_Y_FROM_CENTER(center,width)  (((center) >= ((width) / 2)) ? (center) -  ((width)  / 2) : 0u)
 
-Public inline Rectangle CreateRectangleAroundCenter(Point location, Size size);
+Public Rectangle CreateRectangleAroundCenter(Point location, Size size);
 
 Public char * parseU32FromString(U32 * dest, char * src);
 Public Boolean parseCommaSeparatedU32Array(U32 * dest, char * src, U32 dest_len);
