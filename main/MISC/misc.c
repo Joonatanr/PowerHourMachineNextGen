@@ -38,7 +38,7 @@ Public Boolean parseRectangle(char * src, Rectangle * dest)
 
 
 /* Returns a rectangle around a central point defined by location.*/
-Public inline Rectangle CreateRectangleAroundCenter(Point location, Size size)
+Public Rectangle CreateRectangleAroundCenter(Point location, Size size)
 {
     Rectangle res;
     res.location.x = GET_X_FROM_CENTER(location.x, size.width);
